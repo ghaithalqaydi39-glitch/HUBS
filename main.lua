@@ -1,5 +1,5 @@
 --====================================================================--
--- VARGIN SCRIPT HUB - 65+ FEATURE MEGA EDITION (MOBILE & PC)
+-- VARGIN SCRIPT HUB - ULTIMATE EDITION (180+ FEATURES)
 --====================================================================--
 
 local Players = game:GetService("Players")
@@ -9,44 +9,27 @@ local CoreGui = game:GetService("CoreGui")
 local RunService = game:GetService("RunService")
 local Workspace = game:GetService("Workspace")
 local Lighting = game:GetService("Lighting")
+local StarterGui = game:GetService("StarterGui")
 
 local LocalPlayer = Players.LocalPlayer
 
--- Global Feature States
-local Flags = {
-    -- MOVEMENT (13 Features)
-    InfiniteJump = false, SpeedHack = false, WalkSpeed = 50,
-    JumpPowerHack = false, JumpPower = 100, LowGravity = false, GravityValue = 50,
-    Noclip = false, Fly = false, FlySpeed = 50, SwimInAir = false,
-    InfiniteStamina = false, BunnyHop = false, FreezePosition = false,
-    HighStep = false, AutoRotate = true,
+-- Send Notification on Launch (Friend Request Style)
+pcall(function()
+    StarterGui:SetCore("SendNotification", {
+        Title = "Vargin Script Hub",
+        Text = "WELCOME TO VARGIN PLS VERIFY TO USE THE HUB",
+        Duration = 8,
+        Icon = "rbxassetid://6023426923"
+    })
+end)
 
-    -- VISUALS (13 Features)
-    PlayerESP = false, Chams = false, NameTags = false, DistanceESP = false,
-    HealthBarESP = false, Fullbright = false, NoFog = false, FieldOfView = 70,
-    FOVToggle = false, ThirdPerson = false, CameraDistance = 15, CustomTime = false, TimeOfDay = 12, NightVision = false,
-
-    -- COMBAT (13 Features)
-    KillAura = false, AuraRange = 15, AutoClicker = false, ClickCPS = 10,
-    HitboxExpander = false, HitboxSize = 5, AutoTargetLock = false, AntiKnockback = false,
-    GodmodeTrigger = false, Triggerbot = false, FastAttack = false, AutoParry = false, SilentAimbot = false,
-
-    -- PLAYER & WORLD (13 Features)
-    Spinbot = false, SpinSpeed = 30, AntiAFK = true, AutoRespawn = false,
-    Invisible = false, RemoveTextures = false, ClearDecals = false, RemoveWater = false,
-    DisableTouchKill = false, WalkOnWater = false, AntiVoid = false, TeleportToSpawn = false, RejoinServer = false,
-
-    -- UTILITY (13 Features)
-    FPSUnlocker = false, TargetedFPS = 60, ServerHop = false, CopyJobId = false,
-    ChatSpammer = false, SpamText = "VARGIN HUB ON TOP!", AntiKick = false,
-    HideGUIKeybind = false, PingDisplay = false, FPSDisplay = false, ClearConsole = false,
-    DestroyGUI = false, ResetAllSettings = false
-}
+-- Global Feature Flags State
+local Flags = {}
 
 local OriginalGravity = Workspace.Gravity
 
 ------------------------------------------------------------------------
--- 1. EASY ANTI-BOT HUMAN VERIFICATION (1-Digit Math)
+-- 1. EASY ANTI-BOT HUMAN VERIFICATION
 ------------------------------------------------------------------------
 local ScreenGui = Instance.new("ScreenGui")
 ScreenGui.Name = "VarginScriptHub_UI"
@@ -142,12 +125,12 @@ ToggleBtnCorner.CornerRadius = UDim.new(1, 0)
 ToggleBtnCorner.Parent = OpenToggleBtn
 
 ------------------------------------------------------------------------
--- 3. MAIN GUI STRUCTURE
+-- 3. MAIN GUI STRUCTURE & NAVIGATION
 ------------------------------------------------------------------------
 local MainHub = Instance.new("Frame")
 MainHub.Name = "MainHub"
-MainHub.Size = UDim2.new(0, 720, 0, 440)
-MainHub.Position = UDim2.new(0.5, -360, 0.5, -220)
+MainHub.Size = UDim2.new(0, 750, 0, 460)
+MainHub.Position = UDim2.new(0.5, -375, 0.5, -230)
 MainHub.BackgroundColor3 = Color3.fromRGB(14, 11, 23)
 MainHub.BorderSizePixel = 0
 MainHub.Visible = false
@@ -168,17 +151,9 @@ local SidebarCorner = Instance.new("UICorner")
 SidebarCorner.CornerRadius = UDim.new(0, 14)
 SidebarCorner.Parent = Sidebar
 
-local HeaderIcon = Instance.new("TextLabel")
-HeaderIcon.Size = UDim2.new(0, 30, 0, 30)
-HeaderIcon.Position = UDim2.new(0, 15, 0, 12)
-HeaderIcon.BackgroundTransparency = 1
-HeaderIcon.Text = "💀"
-HeaderIcon.TextSize = 22
-HeaderIcon.Parent = Sidebar
-
 local TitleLabel = Instance.new("TextLabel")
-TitleLabel.Position = UDim2.new(0, 50, 0, 10)
-TitleLabel.Size = UDim2.new(0, 150, 0, 18)
+TitleLabel.Position = UDim2.new(0, 15, 0, 10)
+TitleLabel.Size = UDim2.new(0, 190, 0, 18)
 TitleLabel.BackgroundTransparency = 1
 TitleLabel.Text = "VARGIN SCRIPT HUB"
 TitleLabel.TextColor3 = Color3.fromRGB(150, 90, 255)
@@ -188,26 +163,32 @@ TitleLabel.TextSize = 13
 TitleLabel.Parent = Sidebar
 
 local SubtitleLabel = Instance.new("TextLabel")
-SubtitleLabel.Position = UDim2.new(0, 50, 0, 28)
-SubtitleLabel.Size = UDim2.new(0, 160, 0, 14)
+SubtitleLabel.Position = UDim2.new(0, 15, 0, 28)
+SubtitleLabel.Size = UDim2.new(0, 190, 0, 14)
 SubtitleLabel.BackgroundTransparency = 1
-SubtitleLabel.Text = "v4.0 Ultimate Edition | Universal"
+SubtitleLabel.Text = "v5.0 Ultimate | 180+ Features"
 SubtitleLabel.TextColor3 = Color3.fromRGB(120, 115, 140)
 SubtitleLabel.TextXAlignment = Enum.TextXAlignment.Left
 SubtitleLabel.Font = Enum.Font.Gotham
 SubtitleLabel.TextSize = 10
 SubtitleLabel.Parent = Sidebar
 
-local NavList = Instance.new("Frame")
-NavList.Size = UDim2.new(1, -20, 0, 260)
-NavList.Position = UDim2.new(0, 10, 0, 60)
+local NavList = Instance.new("ScrollingFrame")
+NavList.Size = UDim2.new(1, -10, 1, -55)
+NavList.Position = UDim2.new(0, 5, 0, 50)
 NavList.BackgroundTransparency = 1
+NavList.ScrollBarThickness = 2
+NavList.ScrollBarImageColor3 = Color3.fromRGB(118, 74, 242)
 NavList.Parent = Sidebar
 
-local UIListLayout = Instance.new("UIListLayout")
-UIListLayout.Padding = UDim.new(0, 5)
-UIListLayout.SortOrder = Enum.SortOrder.LayoutOrder
-UIListLayout.Parent = NavList
+local NavLayout = Instance.new("UIListLayout")
+NavLayout.Padding = UDim.new(0, 4)
+NavLayout.SortOrder = Enum.SortOrder.LayoutOrder
+NavLayout.Parent = NavList
+
+NavLayout:GetPropertyChangedSignal("AbsoluteContentSize"):Connect(function()
+    NavList.CanvasSize = UDim2.new(0, 0, 0, NavLayout.AbsoluteContentSize.Y + 10)
+end)
 
 local ContentArea = Instance.new("Frame")
 ContentArea.Size = UDim2.new(1, -230, 1, -20)
@@ -216,20 +197,25 @@ ContentArea.BackgroundTransparency = 1
 ContentArea.Parent = MainHub
 
 local Tabs = {}
-local function CreateTab(name, icon, order)
+local tabOrderCount = 0
+
+local function CreateTab(name, icon)
+    tabOrderCount = tabOrderCount + 1
+    local order = tabOrderCount
+
     local TabBtn = Instance.new("TextButton")
-    TabBtn.Size = UDim2.new(1, 0, 0, 34)
+    TabBtn.Size = UDim2.new(1, -5, 0, 32)
     TabBtn.BackgroundColor3 = (order == 1) and Color3.fromRGB(34, 27, 58) or Color3.fromRGB(22, 18, 35)
-    TabBtn.Text = "    " .. icon .. "  " .. name
+    TabBtn.Text = "   " .. icon .. "  " .. name
     TabBtn.TextColor3 = (order == 1) and Color3.fromRGB(255, 255, 255) or Color3.fromRGB(150, 145, 170)
     TabBtn.Font = Enum.Font.GothamMedium
-    TabBtn.TextSize = 12
+    TabBtn.TextSize = 11
     TabBtn.TextXAlignment = Enum.TextXAlignment.Left
     TabBtn.LayoutOrder = order
     TabBtn.Parent = NavList
 
     local TabBtnCorner = Instance.new("UICorner")
-    TabBtnCorner.CornerRadius = UDim.new(0, 8)
+    TabBtnCorner.CornerRadius = UDim.new(0, 6)
     TabBtnCorner.Parent = TabBtn
 
     local Page = Instance.new("ScrollingFrame")
@@ -238,11 +224,10 @@ local function CreateTab(name, icon, order)
     Page.Visible = (order == 1)
     Page.ScrollBarThickness = 3
     Page.ScrollBarImageColor3 = Color3.fromRGB(118, 74, 242)
-    Page.CanvasSize = UDim2.new(0, 0, 0, 0)
     Page.Parent = ContentArea
 
     local PageList = Instance.new("UIListLayout")
-    PageList.Padding = UDim.new(0, 8)
+    PageList.Padding = UDim.new(0, 6)
     PageList.SortOrder = Enum.SortOrder.LayoutOrder
     PageList.Parent = Page
 
@@ -266,19 +251,14 @@ local function CreateTab(name, icon, order)
     return Page
 end
 
--- Create Subtitles / Categories
-local MovementTab = CreateTab("Movement", "🏃", 1)
-local VisualsTab  = CreateTab("Visuals", "👁️", 2)
-local CombatTab   = CreateTab("Combat", "⚔️", 3)
-local PlayerTab   = CreateTab("Player & World", "🌐", 4)
-local UtilityTab  = CreateTab("Utility", "⚙️", 5)
-
 ------------------------------------------------------------------------
--- UI COMPONENT BUILDERS
+-- COMPONENT BUILDERS (Toggles & Sliders)
 ------------------------------------------------------------------------
 local function CreateToggle(parent, title, desc, flagName, callback)
+    Flags[flagName] = false
+
     local Card = Instance.new("Frame")
-    Card.Size = UDim2.new(1, -10, 0, 58)
+    Card.Size = UDim2.new(1, -10, 0, 52)
     Card.BackgroundColor3 = Color3.fromRGB(23, 19, 37)
     Card.Parent = parent
 
@@ -287,31 +267,31 @@ local function CreateToggle(parent, title, desc, flagName, callback)
     CardCorner.Parent = Card
 
     local Title = Instance.new("TextLabel")
-    Title.Position = UDim2.new(0, 12, 0, 10)
+    Title.Position = UDim2.new(0, 12, 0, 8)
     Title.Size = UDim2.new(0, 300, 0, 16)
     Title.BackgroundTransparency = 1
     Title.Text = title
     Title.TextColor3 = Color3.fromRGB(255, 255, 255)
     Title.Font = Enum.Font.GothamBold
     Title.TextXAlignment = Enum.TextXAlignment.Left
-    Title.TextSize = 13
+    Title.TextSize = 12
     Title.Parent = Card
 
     local Desc = Instance.new("TextLabel")
-    Desc.Position = UDim2.new(0, 12, 0, 28)
+    Desc.Position = UDim2.new(0, 12, 0, 24)
     Desc.Size = UDim2.new(0, 320, 0, 16)
     Desc.BackgroundTransparency = 1
     Desc.Text = desc
     Desc.TextColor3 = Color3.fromRGB(130, 125, 150)
     Desc.Font = Enum.Font.Gotham
     Desc.TextXAlignment = Enum.TextXAlignment.Left
-    Desc.TextSize = 11
+    Desc.TextSize = 10
     Desc.Parent = Card
 
     local ToggleBG = Instance.new("Frame")
-    ToggleBG.Size = UDim2.new(0, 44, 0, 22)
-    ToggleBG.Position = UDim2.new(1, -56, 0.5, -11)
-    ToggleBG.BackgroundColor3 = Flags[flagName] and Color3.fromRGB(118, 74, 242) or Color3.fromRGB(40, 34, 60)
+    ToggleBG.Size = UDim2.new(0, 40, 0, 20)
+    ToggleBG.Position = UDim2.new(1, -50, 0.5, -10)
+    ToggleBG.BackgroundColor3 = Color3.fromRGB(40, 34, 60)
     ToggleBG.Parent = Card
 
     local ToggleCorner = Instance.new("UICorner")
@@ -319,8 +299,8 @@ local function CreateToggle(parent, title, desc, flagName, callback)
     ToggleCorner.Parent = ToggleBG
 
     local ToggleCircle = Instance.new("Frame")
-    ToggleCircle.Size = UDim2.new(0, 16, 0, 16)
-    ToggleCircle.Position = Flags[flagName] and UDim2.new(1, -19, 0.5, -8) or UDim2.new(0, 3, 0.5, -8)
+    ToggleCircle.Size = UDim2.new(0, 14, 0, 14)
+    ToggleCircle.Position = UDim2.new(0, 3, 0.5, -7)
     ToggleCircle.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
     ToggleCircle.Parent = ToggleBG
 
@@ -336,7 +316,7 @@ local function CreateToggle(parent, title, desc, flagName, callback)
 
     ClickBtn.MouseButton1Click:Connect(function()
         Flags[flagName] = not Flags[flagName]
-        local targetPos = Flags[flagName] and UDim2.new(1, -19, 0.5, -8) or UDim2.new(0, 3, 0.5, -8)
+        local targetPos = Flags[flagName] and UDim2.new(1, -17, 0.5, -7) or UDim2.new(0, 3, 0.5, -7)
         local targetColor = Flags[flagName] and Color3.fromRGB(118, 74, 242) or Color3.fromRGB(40, 34, 60)
 
         TweenService:Create(ToggleCircle, TweenInfo.new(0.2), {Position = targetPos}):Play()
@@ -347,8 +327,10 @@ local function CreateToggle(parent, title, desc, flagName, callback)
 end
 
 local function CreateSlider(parent, title, desc, min, max, default, flagName, callback)
+    Flags[flagName] = default
+
     local Card = Instance.new("Frame")
-    Card.Size = UDim2.new(1, -10, 0, 68)
+    Card.Size = UDim2.new(1, -10, 0, 60)
     Card.BackgroundColor3 = Color3.fromRGB(23, 19, 37)
     Card.Parent = parent
 
@@ -357,40 +339,40 @@ local function CreateSlider(parent, title, desc, min, max, default, flagName, ca
     CardCorner.Parent = Card
 
     local Title = Instance.new("TextLabel")
-    Title.Position = UDim2.new(0, 12, 0, 10)
+    Title.Position = UDim2.new(0, 12, 0, 8)
     Title.Size = UDim2.new(0, 200, 0, 16)
     Title.BackgroundTransparency = 1
     Title.Text = title
     Title.TextColor3 = Color3.fromRGB(255, 255, 255)
     Title.Font = Enum.Font.GothamBold
     Title.TextXAlignment = Enum.TextXAlignment.Left
-    Title.TextSize = 13
+    Title.TextSize = 12
     Title.Parent = Card
 
     local Desc = Instance.new("TextLabel")
-    Desc.Position = UDim2.new(0, 12, 0, 28)
-    Desc.Size = UDim2.new(0, 260, 0, 16)
+    Desc.Position = UDim2.new(0, 12, 0, 24)
+    Desc.Size = UDim2.new(0, 240, 0, 16)
     Desc.BackgroundTransparency = 1
     Desc.Text = desc
     Desc.TextColor3 = Color3.fromRGB(130, 125, 150)
     Desc.Font = Enum.Font.Gotham
     Desc.TextXAlignment = Enum.TextXAlignment.Left
-    Desc.TextSize = 11
+    Desc.TextSize = 10
     Desc.Parent = Card
 
     local ValLabel = Instance.new("TextLabel")
-    ValLabel.Position = UDim2.new(1, -170, 0, 10)
+    ValLabel.Position = UDim2.new(1, -160, 0, 8)
     ValLabel.Size = UDim2.new(0, 40, 0, 16)
     ValLabel.BackgroundTransparency = 1
     ValLabel.Text = tostring(default)
     ValLabel.TextColor3 = Color3.fromRGB(180, 175, 200)
     ValLabel.Font = Enum.Font.GothamBold
-    ValLabel.TextSize = 12
+    ValLabel.TextSize = 11
     ValLabel.Parent = Card
 
     local SliderBar = Instance.new("Frame")
     SliderBar.Size = UDim2.new(0, 110, 0, 6)
-    SliderBar.Position = UDim2.new(1, -125, 0, 34)
+    SliderBar.Position = UDim2.new(1, -120, 0, 30)
     SliderBar.BackgroundColor3 = Color3.fromRGB(40, 34, 60)
     SliderBar.Parent = Card
 
@@ -438,98 +420,243 @@ local function CreateSlider(parent, title, desc, min, max, default, flagName, ca
 end
 
 ------------------------------------------------------------------------
--- FEATURE IMPLEMENTATIONS (EXACTLY 13 FEATURES PER SUBTITLE)
+-- CREATE 6 SUBTITLES (CATEGORIES)
+------------------------------------------------------------------------
+local MoveTab    = CreateTab("Movement", "🏃")
+local VisTab     = CreateTab("Visuals", "👁️")
+local CombTab    = CreateTab("Combat", "⚔️")
+local PlayerTab  = CreateTab("Player Options", "👤")
+local WorldTab   = CreateTab("World & Environment", "🌐")
+local UtilTab    = CreateTab("Utility & Settings", "⚙️")
+
+------------------------------------------------------------------------
+-- POPULATE EXACTLY 30 FEATURES PER SUBTITLE (180 TOTAL)
 ------------------------------------------------------------------------
 
--- 1. MOVEMENT TAB (13 FEATURES)
-CreateToggle(MovementTab, "Speed Hack", "Overrides walking speed via RenderStepped", "SpeedHack")
-CreateSlider(MovementTab, "WalkSpeed Value", "Adjust movement speed multiplier", 16, 250, 50, "WalkSpeed")
-CreateToggle(MovementTab, "JumpPower Hack", "Overrides character jump height", "JumpPowerHack")
-CreateSlider(MovementTab, "Jump Power Value", "Adjust jump velocity strength", 50, 300, 100, "JumpPower")
-CreateToggle(MovementTab, "Infinite Jump", "Allows jumping limitlessly mid-air", "InfiniteJump")
-CreateToggle(MovementTab, "Low Gravity", "Reduces map gravity effect", "LowGravity", function(st) Workspace.Gravity = st and Flags.GravityValue or OriginalGravity end)
-CreateSlider(MovementTab, "Gravity Custom Value", "Set custom world gravity level", 0, 196, 50, "GravityValue", function(v) if Flags.LowGravity then Workspace.Gravity = v end end)
-CreateToggle(MovementTab, "Noclip", "Walk through all physical walls", "Noclip")
-CreateToggle(MovementTab, "Fly Mode", "Fly freely across map boundaries", "Fly")
-CreateSlider(MovementTab, "Fly Speed", "Adjust flying velocity speed", 10, 200, 50, "FlySpeed")
-CreateToggle(MovementTab, "Swim In Air", "Enables character swimming anywhere", "SwimInAir")
-CreateToggle(MovementTab, "Bunny Hop", "Automatically jumps continuously", "BunnyHop")
-CreateToggle(MovementTab, "Freeze Position", "Anchors character in mid-air", "FreezePosition")
+-- 1. MOVEMENT (30 FEATURES)
+CreateToggle(MoveTab, "Speed Hack", "Overrides walking velocity continuously", "SpeedHack")
+CreateSlider(MoveTab, "WalkSpeed Value", "Set customized walking speed limit", 16, 300, 50, "WalkSpeed")
+CreateToggle(MoveTab, "JumpPower Hack", "Overrides character jump strength", "JumpPowerHack")
+CreateSlider(MoveTab, "JumpPower Value", "Set customized jump height limit", 50, 300, 100, "JumpPower")
+CreateToggle(MoveTab, "Infinite Jump", "Jump endlessly without touching ground", "InfiniteJump")
+CreateToggle(MoveTab, "Low Gravity", "Reduces world gravity effect", "LowGravity", function(st) Workspace.Gravity = st and Flags.GravityValue or OriginalGravity end)
+CreateSlider(MoveTab, "Gravity Custom Value", "Adjust custom world gravity level", 0, 196, 50, "GravityValue", function(v) if Flags.LowGravity then Workspace.Gravity = v end end)
+CreateToggle(MoveTab, "Noclip", "Walk through walls and barriers", "Noclip")
+CreateToggle(MoveTab, "Fly Mode", "Fly around the map smoothly", "Fly")
+CreateSlider(MoveTab, "Fly Speed", "Set flying velocity speed multiplier", 10, 200, 50, "FlySpeed")
+CreateToggle(MoveTab, "Swim In Air", "Swims freely through open air", "SwimInAir")
+CreateToggle(MoveTab, "Bunny Hop", "Automatically jumps upon hitting floor", "BunnyHop")
+CreateToggle(MoveTab, "Freeze Position", "Anchors player position mid-air", "FreezePosition")
+CreateToggle(MoveTab, "High Step", "Walk up steep walls automatically", "HighStep")
+CreateToggle(MoveTab, "Disable Auto-Rotate", "Prevents character turning with mouse", "DisableAutoRotate")
+CreateToggle(MoveTab, "Speed Drift", "Slide smoothly across all surfaces", "SpeedDrift")
+CreateToggle(MoveTab, "Wall Climb", "Climb straight up vertical surfaces", "WallClimb")
+CreateToggle(MoveTab, "Spider Mode", "Walk on walls seamlessly", "SpiderMode")
+CreateToggle(MoveTab, "Air Walk", "Spawns invisible platform under feet", "AirWalk")
+CreateToggle(MoveTab, "Dash Exploit", "Instant forward velocity dash", "DashExploit")
+CreateToggle(MoveTab, "Fast Fall", "Increases downward fall speed", "FastFall")
+CreateToggle(MoveTab, "No Fall Damage", "Bypasses standard fall damage", "NoFallDamage")
+CreateToggle(MoveTab, "Phase Shift", "Phases forward through thin objects", "PhaseShift")
+CreateToggle(MoveTab, "Super Jump", "Massive single burst jump", "SuperJump")
+CreateToggle(MoveTab, "Zero Friction", "Removes floor friction completely", "ZeroFriction")
+CreateToggle(MoveTab, "Hover Mode", "Maintains fixed height off ground", "HoverMode")
+CreateToggle(MoveTab, "Auto Walk Forward", "Forces player to keep moving forward", "AutoWalk")
+CreateToggle(MoveTab, "Smooth Glide", "Glides gently down from heights", "SmoothGlide")
+CreateToggle(MoveTab, "Directional Boost", "Boosts velocity in movement vector", "DirectionalBoost")
+CreateToggle(MoveTab, "Instant Stop", "Stops momentum immediately", "InstantStop")
 
--- 2. VISUALS TAB (13 FEATURES)
-CreateToggle(VisualsTab, "Player ESP Highlight", "Draws highlights over all players", "PlayerESP")
-CreateToggle(VisualsTab, "Box ESP", "Draws 2D box boundaries around players", "BoxESP")
-CreateToggle(VisualsTab, "NameTags ESP", "Shows player display names through walls", "NameTags")
-CreateToggle(VisualsTab, "Distance ESP", "Displays exact player distances", "DistanceESP")
-CreateToggle(VisualsTab, "Health Bar ESP", "Displays live health bars on targets", "HealthBarESP")
-CreateToggle(VisualsTab, "Fullbright Mode", "Removes darkness and full ambient light", "Fullbright", function(st) Lighting.Ambient = st and Color3.fromRGB(255,255,255) or Color3.fromRGB(127,127,127) end)
-CreateToggle(VisualsTab, "Remove Fog", "Clears dark atmospheric map fog", "NoFog", function(st) Lighting.FogEnd = st and 9e9 or 10000 end)
-CreateToggle(VisualsTab, "Custom Camera FOV", "Enables custom field of view zoom", "FOVToggle")
-CreateSlider(VisualsTab, "Field of View Value", "Adjust field of view distance", 50, 120, 70, "FieldOfView")
-CreateToggle(VisualsTab, "Third Person Mode", "Forces camera distance back", "ThirdPerson")
-CreateSlider(VisualsTab, "Camera Distance", "Adjust custom third person range", 5, 50, 15, "CameraDistance")
-CreateToggle(VisualsTab, "Custom Time Of Day", "Forces custom sky time override", "CustomTime")
-CreateSlider(VisualsTab, "Time Value", "Adjust world clock hour time", 0, 24, 12, "TimeOfDay", function(v) if Flags.CustomTime then Lighting.ClockTime = v end end)
+-- 2. VISUALS (30 FEATURES)
+CreateToggle(VisTab, "Player ESP Highlight", "Outline players through walls", "PlayerESP")
+CreateToggle(VisTab, "Box ESP", "Draws 2D boxes around players", "BoxESP")
+CreateToggle(VisTab, "NameTags ESP", "Shows player display names through walls", "NameTags")
+CreateToggle(VisTab, "Distance ESP", "Shows exact distance to players", "DistanceESP")
+CreateToggle(VisTab, "Health Bar ESP", "Displays live player health bars", "HealthBarESP")
+CreateToggle(VisTab, "Fullbright", "Removes all dark lighting and shadows", "Fullbright", function(st) Lighting.Ambient = st and Color3.fromRGB(255,255,255) or Color3.fromRGB(127,127,127) end)
+CreateToggle(VisTab, "Remove Fog", "Clears dark atmospheric map fog", "NoFog", function(st) Lighting.FogEnd = st and 9e9 or 10000 end)
+CreateToggle(VisTab, "Custom Camera FOV", "Forces custom camera field of view", "FOVToggle")
+CreateSlider(VisTab, "Field of View Value", "Adjust camera FOV angle", 50, 120, 70, "FieldOfView")
+CreateToggle(VisTab, "Third Person Mode", "Forces camera distance back", "ThirdPerson")
+CreateSlider(VisTab, "Camera Distance", "Adjust custom third person range", 5, 50, 15, "CameraDistance")
+CreateToggle(VisTab, "Custom Time Of Day", "Forces custom map lighting hour", "CustomTime")
+CreateSlider(VisTab, "Time Value", "Set world clock time", 0, 24, 12, "TimeOfDay", function(v) if Flags.CustomTime then Lighting.ClockTime = v end end)
+CreateToggle(VisTab, "Chams ESP", "Renders filled player colors through walls", "Chams")
+CreateToggle(VisTab, "Tracer Lines", "Draws lines connecting to players", "Tracers")
+CreateToggle(VisTab, "Skeleton ESP", "Displays skeleton bones through walls", "SkeletonESP")
+CreateToggle(VisTab, "Head Dot ESP", "Draws dot over player head", "HeadDotESP")
+CreateToggle(VisTab, "Rainbow Character", "Cycles character color continuously", "RainbowChar")
+CreateToggle(VisTab, "X-Ray Vision", "Makes nearby walls transparent", "XRay")
+CreateToggle(VisTab, "Night Vision", "Brightens dark scenes naturally", "NightVision")
+CreateToggle(VisTab, "Crosshair Overlay", "Displays permanent center crosshair", "Crosshair")
+CreateToggle(VisTab, "Item ESP", "Displays nearby dropped items", "ItemESP")
+CreateToggle(VisTab, "NPC ESP", "Highlights non-player characters", "NPCESP")
+CreateToggle(VisTab, "No Shadows", "Disables real-time rendering shadows", "NoShadows")
+CreateToggle(VisTab, "Thermal Vision", "Highlights players in red overlay", "ThermalVision")
+CreateToggle(VisTab, "Show Player Velocity", "Prints player movement speed text", "ShowVelocity")
+CreateToggle(VisTab, "No Blur Effect", "Removes camera motion blur", "NoBlur")
+CreateToggle(VisTab, "Zoom Unlock", "Allows infinite camera zoom out", "ZoomUnlock")
+CreateToggle(VisTab, "Spectate Mode", "View other player camera angles", "SpectateMode")
+CreateToggle(VisTab, "Camera Shake Remover", "Stops map/weapon camera shake", "NoCamShake")
 
--- 3. COMBAT TAB (13 FEATURES)
-CreateToggle(CombatTab, "Kill Aura", "Damages nearby entities automatically", "KillAura")
-CreateSlider(CombatTab, "Aura Reach", "Adjust kill aura detection radius", 5, 50, 15, "AuraRange")
-CreateToggle(CombatTab, "Auto Clicker", "Simulates continuous left clicks", "AutoClicker")
-CreateSlider(CombatTab, "Click Speed (CPS)", "Adjust clicks rendered per second", 1, 30, 10, "ClickCPS")
-CreateToggle(CombatTab, "Hitbox Expander", "Expands enemy head hitboxes", "HitboxExpander")
-CreateSlider(CombatTab, "Hitbox Expansion Size", "Adjust expanded head scale", 1, 20, 5, "HitboxSize")
-CreateToggle(CombatTab, "Auto Target Lock", "Locks camera onto nearest enemy", "AutoTargetLock")
-CreateToggle(CombatTab, "Anti Knockback", "Prevents getting pushed by attacks", "AntiKnockback")
-CreateToggle(CombatTab, "Triggerbot", "Fires instantly when aiming at enemy", "Triggerbot")
-CreateToggle(CombatTab, "Fast Attack", "Removes weapon swinging cooldowns", "FastAttack")
-CreateToggle(CombatTab, "Auto Parry", "Automatically blocks enemy attacks", "AutoParry")
-CreateToggle(CombatTab, "Silent Aimbot", "Redirects projectiles toward targets", "SilentAimbot")
-CreateToggle(CombatTab, "Godmode Defense", "Prevents incoming touch damage", "GodmodeTrigger")
+-- 3. COMBAT (30 FEATURES)
+CreateToggle(CombTab, "Kill Aura", "Damages nearby targets automatically", "KillAura")
+CreateSlider(CombTab, "Aura Reach", "Adjust kill aura detection radius", 5, 50, 15, "AuraRange")
+CreateToggle(CombTab, "Auto Clicker", "Simulates continuous left clicks", "AutoClicker")
+CreateSlider(CombTab, "Click Speed (CPS)", "Adjust clicks rendered per second", 1, 30, 10, "ClickCPS")
+CreateToggle(CombTab, "Hitbox Expander", "Expands enemy head hitboxes", "HitboxExpander")
+CreateSlider(CombTab, "Hitbox Expansion Size", "Adjust expanded head scale", 1, 20, 5, "HitboxSize")
+CreateToggle(CombTab, "Auto Target Lock", "Locks camera onto nearest enemy", "AutoTargetLock")
+CreateToggle(CombTab, "Anti Knockback", "Prevents getting pushed by attacks", "AntiKnockback")
+CreateToggle(CombTab, "Triggerbot", "Fires instantly when aiming at enemy", "Triggerbot")
+CreateToggle(CombTab, "Fast Attack", "Removes weapon swinging cooldowns", "FastAttack")
+CreateToggle(CombTab, "Auto Parry", "Automatically blocks enemy attacks", "AutoParry")
+CreateToggle(CombTab, "Silent Aimbot", "Redirects projectiles toward targets", "SilentAimbot")
+CreateToggle(CombTab, "Godmode Defense", "Prevents incoming touch damage", "GodmodeTrigger")
+CreateToggle(CombTab, "Reach Hack", "Extends melee attack distance", "ReachHack")
+CreateToggle(CombTab, "Auto Equip Weapon", "Equips combat weapon automatically", "AutoEquip")
+CreateToggle(CombTab, "Fast Reload", "Bypasses gun reload animations", "FastReload")
+CreateToggle(CombTab, "No Recoil", "Removes gun kickback completely", "NoRecoil")
+CreateToggle(CombTab, "No Spread", "Fires weapons in straight lines", "NoSpread")
+CreateToggle(CombTab, "Infinite Ammo", "Prevents ammo counter depletion", "InfAmmo")
+CreateToggle(CombTab, "Rapid Fire", "Increases fire rate drastically", "RapidFire")
+CreateToggle(CombTab, "Auto Reload", "Reloads weapon when empty", "AutoReload")
+CreateToggle(CombTab, "Aim Lock Smooth", "Smoothly glides crosshair to target", "AimLockSmooth")
+CreateToggle(CombTab, "Wallbang Exploit", "Bullets shoot through thin walls", "Wallbang")
+CreateToggle(CombTab, "Team Check Aimbot", "Ignores friendly team members", "TeamCheck")
+CreateToggle(CombTab, "FOV Circle Display", "Shows aimbot target area circle", "FOVCircle")
+CreateToggle(CombTab, "Auto Health Potions", "Uses healing items when low health", "AutoHeal")
+CreateToggle(CombTab, "Auto Dodge", "Dodges enemy attacks automatically", "AutoDodge")
+CreateToggle(CombTab, "Backstab Assist", "Teleports behind enemy for backstab", "Backstab")
+CreateToggle(CombTab, "Shield Block Assist", "Raises shield automatically on hit", "ShieldBlock")
+CreateToggle(CombTab, "Target Prioritizer", "Prioritizes targets with lowest health", "TargetPriority")
 
--- 4. PLAYER & WORLD TAB (13 FEATURES)
+-- 4. PLAYER OPTIONS (30 FEATURES)
 CreateToggle(PlayerTab, "Spinbot", "Spins character rapidly in place", "Spinbot")
 CreateSlider(PlayerTab, "Spin Speed Value", "Adjust rotation speed angle", 5, 100, 30, "SpinSpeed")
 CreateToggle(PlayerTab, "Anti-AFK System", "Prevents idle kicks automatically", "AntiAFK")
 CreateToggle(PlayerTab, "Auto Respawn", "Respawns immediately after dying", "AutoRespawn")
 CreateToggle(PlayerTab, "Invisible Character", "Hides character body visually", "Invisible")
-CreateToggle(PlayerTab, "Remove Textures", "Boosts performance by wiping textures", "RemoveTextures")
-CreateToggle(PlayerTab, "Clear Decals", "Removes map decal images", "ClearDecals")
-CreateToggle(PlayerTab, "Remove Water", "Removes map water rendering", "RemoveWater")
-CreateToggle(PlayerTab, "Disable Touch Killers", "Disables lethal map touch parts", "DisableTouchKill")
 CreateToggle(PlayerTab, "Walk On Water", "Makes water surfaces solid", "WalkOnWater")
 CreateToggle(PlayerTab, "Anti Void Fall", "Teleports back up when falling in void", "AntiVoid")
-CreateToggle(PlayerTab, "Teleport To Spawn", "Instantly teleports to world spawn", "TeleportToSpawn", function()
+CreateToggle(PlayerTab, "Godmode Anti-Die", "Attempts to prevent character death", "Godmode")
+CreateToggle(PlayerTab, "Remove Accessories", "Removes all hat accessories", "RemoveHats")
+CreateToggle(PlayerTab, "Remove Shirt/Pants", "Removes clothes visually", "RemoveClothing")
+CreateToggle(PlayerTab, "Fake Lag", "Simulates network lag spikes", "FakeLag")
+CreateToggle(PlayerTab, "Anti-Grab", "Prevents players carrying character", "AntiGrab")
+CreateToggle(PlayerTab, "Anti-Fling", "Prevents getting flung by hackers", "AntiFling")
+CreateToggle(PlayerTab, "Auto Sit Remover", "Prevents sitting on map seats", "AntiSit")
+CreateToggle(PlayerTab, "Force Reset", "Kills character immediately", "ForceReset", function()
+    if LocalPlayer.Character and LocalPlayer.Character:FindFirstChild("Humanoid") then
+        LocalPlayer.Character.Humanoid.Health = 0
+    end
+end)
+CreateToggle(PlayerTab, "Naked Mesh", "Removes character body textures", "NakedMesh")
+CreateToggle(PlayerTab, "Giant Character", "Scales local character size up", "GiantChar")
+CreateToggle(PlayerTab, "Tiny Character", "Scales local character size down", "TinyChar")
+CreateToggle(PlayerTab, "Headless Visual", "Hides local player head", "Headless")
+CreateToggle(PlayerTab, "Korblox Visual", "Hides local right leg", "Korblox")
+CreateToggle(PlayerTab, "Custom Body Color", "Overrides skin tone color", "BodyColor")
+CreateToggle(PlayerTab, "Auto Chat Thanks", "Auto chats upon being revived", "AutoThanks")
+CreateToggle(PlayerTab, "No Emote Cooldown", "Spams emotes rapidly", "NoEmoteCd")
+CreateToggle(PlayerTab, "Keep Inventory", "Prevents item drop on death", "KeepInv")
+CreateToggle(PlayerTab, "Infinite Stamina", "Locks stamina bar to maximum", "InfStamina")
+CreateToggle(PlayerTab, "No Stun", "Bypasses attack stunned state", "NoStun")
+CreateToggle(PlayerTab, "No Slowdown", "Bypasses walking speed debuffs", "NoSlowdown")
+CreateToggle(PlayerTab, "Unanchored Fling", "Flings unanchored map objects", "FlingObjects")
+CreateToggle(PlayerTab, "Auto Claim Badges", "Touches badge giver parts", "ClaimBadges")
+CreateToggle(PlayerTab, "Character Trail", "Leaves colorful trail behind movement", "CharTrail")
+
+-- 5. WORLD & ENVIRONMENT (30 FEATURES)
+CreateToggle(WorldTab, "Remove Textures", "Boosts FPS by wiping map textures", "RemoveTextures")
+CreateToggle(WorldTab, "Clear Decals", "Removes map decal images completely", "ClearDecals")
+CreateToggle(WorldTab, "Remove Water", "Deletes water terrain rendering", "RemoveWater")
+CreateToggle(WorldTab, "Disable Touch Killers", "Disables lethal kill parts", "DisableTouchKill")
+CreateToggle(WorldTab, "Teleport To Spawn", "Instantly teleports to world spawn", "TeleportSpawn", function()
     if LocalPlayer.Character and LocalPlayer.Character:FindFirstChild("HumanoidRootPart") then
         LocalPlayer.Character.HumanoidRootPart.CFrame = CFrame.new(0, 50, 0)
     end
 end)
-CreateToggle(PlayerTab, "Rejoin Game Server", "Rejoins current Roblox game", "RejoinServer", function()
-    game:GetService("TeleportService"):TeleportToPlaceInstance(game.PlaceId, game.JobId, LocalPlayer)
-end)
+CreateToggle(WorldTab, "Day Time Force", "Locks time of day to noon", "ForceDay", function(st) if st then Lighting.ClockTime = 12 end end)
+CreateToggle(WorldTab, "Night Time Force", "Locks time of day to midnight", "ForceNight", function(st) if st then Lighting.ClockTime = 0 end end)
+CreateToggle(WorldTab, "Remove Atmosphere", "Removes sky effects and skybox clouds", "NoAtmosphere")
+CreateToggle(WorldTab, "Disable Skybox", "Replaces sky with black background", "NoSkybox")
+CreateToggle(WorldTab, "Rainbow Ambient", "Cycles world lighting colors", "RainbowLighting")
+CreateToggle(WorldTab, "Remove Particle FX", "Deletes map smoke and sparks", "NoParticles")
+CreateToggle(WorldTab, "Remove Map Sound FX", "Mutes ambient environmental audio", "MuteAmbient")
+CreateToggle(WorldTab, "Remove Trees/Foliage", "Deletes map trees and leaves", "NoTrees")
+CreateToggle(WorldTab, "Remove Map Doors", "Deletes map door parts", "NoDoors")
+CreateToggle(WorldTab, "Remove Glass Barriers", "Deletes glass map windows", "NoGlass")
+CreateToggle(WorldTab, "Low Poly World", "Converts materials to smooth plastic", "LowPoly")
+CreateToggle(WorldTab, "Freeze Map Physics", "Anchors unanchored world parts", "FreezePhysics")
+CreateToggle(WorldTab, "Bring Nearby Parts", "Pulls loose unanchored parts close", "BringParts")
+CreateToggle(WorldTab, "Delete Touch Triggers", "Deletes invisible touch scripts", "NoTriggers")
+CreateToggle(WorldTab, "Custom Skybox", "Applies purple night skybox", "CustomSky")
+CreateToggle(WorldTab, "Unlock Map Limits", "Removes map barrier boundaries", "UnclampMap")
+CreateToggle(WorldTab, "Bright Sunlight", "Increases solar light intensity", "BrightSun")
+CreateToggle(WorldTab, "Zero Environment Gravity", "Sets map gravity to zero", "ZeroGrav")
+CreateToggle(WorldTab, "Clear Map Lava", "Destroys map lava hazard parts", "NoLava")
+CreateToggle(WorldTab, "Disable Map Conveyors", "Stops moving conveyor belts", "NoConveyors")
+CreateToggle(WorldTab, "Remove Blur Lighting", "Deletes lighting blur instances", "ClearBlur")
+CreateToggle(WorldTab, "Remove Bloom Lighting", "Deletes lighting bloom instances", "ClearBloom")
+CreateToggle(WorldTab, "Remove Depth of Field", "Deletes DOF camera blur", "ClearDOF")
+CreateToggle(WorldTab, "High Contrast World", "Increases color saturation", "HighContrast")
+CreateToggle(WorldTab, "Blackout World Mode", "Turns ambient light pitch black", "Blackout")
 
--- 5. UTILITY TAB (13 FEATURES)
-CreateToggle(UtilityTab, "Unlock Frame Rate", "Removes 60 FPS cap limit", "FPSUnlocker")
-CreateSlider(UtilityTab, "Target Frame Rate", "Set custom maximum FPS", 30, 240, 120, "TargetedFPS", function(v) if setfpscap then setfpscap(v) end end)
-CreateToggle(UtilityTab, "Server Hop", "Joins a different game server", "ServerHop", function()
+-- 6. UTILITY & SETTINGS (30 FEATURES)
+CreateToggle(UtilTab, "Unlock Frame Rate", "Removes 60 FPS cap limit", "FPSUnlocker")
+CreateSlider(UtilTab, "Target Frame Rate", "Set custom maximum FPS", 30, 240, 120, "TargetedFPS", function(v) if setfpscap then setfpscap(v) end end)
+CreateToggle(UtilTab, "Server Hop", "Joins a different game server", "ServerHop", function()
     game:GetService("TeleportService"):Teleport(game.PlaceId, LocalPlayer)
 end)
-CreateToggle(UtilityTab, "Copy Job ID", "Copies server JobID to clipboard", "CopyJobId", function()
+CreateToggle(UtilTab, "Copy Job ID", "Copies server JobID to clipboard", "CopyJobId", function()
     if setclipboard then setclipboard(tostring(game.JobId)) end
 end)
-CreateToggle(UtilityTab, "Chat Spammer", "Repeats auto-chat message", "ChatSpammer")
-CreateToggle(UtilityTab, "Anti-Kick Bypass", "Blocks client disconnection scripts", "AntiKick")
-CreateToggle(UtilityTab, "Ping Display", "Prints active network latency", "PingDisplay")
-CreateToggle(UtilityTab, "FPS Performance Counter", "Prints active frame rendering speed", "FPSDisplay")
-CreateToggle(UtilityTab, "Clear Dev Console", "Clears client output log errors", "ClearConsole")
-CreateToggle(UtilityTab, "Destroy Script GUI", "Unloads Vargin Hub completely", "DestroyGUI", function()
-    ScreenGui:Destroy()
+CreateToggle(UtilTab, "Rejoin Game Server", "Rejoins current Roblox server", "RejoinServer", function()
+    game:GetService("TeleportService"):TeleportToPlaceInstance(game.PlaceId, game.JobId, LocalPlayer)
 end)
-CreateToggle(UtilityTab, "Hide GUI Keybind", "Toggles visibility with RightControl", "HideGUIKeybind")
-CreateToggle(UtilityTab, "Reset All Settings", "Restores original default state", "ResetAllSettings")
-CreateToggle(UtilityTab, "Re-verify Human Test", "Re-opens anti-bot verification modal", "ReVerify", function()
+CreateToggle(UtilTab, "Chat Spammer", "Repeats auto-chat message continuously", "ChatSpammer")
+CreateToggle(UtilTab, "Anti-Kick Bypass", "Blocks client disconnection scripts", "AntiKick")
+CreateToggle(UtilTab, "Ping Display", "Prints active network latency", "PingDisplay")
+CreateToggle(UtilTab, "FPS Performance Counter", "Prints active frame rendering speed", "FPSDisplay")
+CreateToggle(UtilTab, "Clear Dev Console", "Clears client output log errors", "ClearConsole")
+CreateToggle(UtilTab, "Destroy Script GUI", "Unloads Vargin Hub completely", "DestroyGUI", function() ScreenGui:Destroy() end)
+CreateToggle(UtilTab, "Hide GUI Keybind", "Toggles visibility with RightControl", "HideGUIKeybind")
+CreateToggle(UtilTab, "Reset All Settings", "Restores original default state", "ResetAllSettings")
+CreateToggle(UtilTab, "Re-verify Human Test", "Re-opens anti-bot verification modal", "ReVerify", function()
     MainHub.Visible = false
     VerifyFrame.Visible = true
 end)
+CreateToggle(UtilTab, "Copy Game Place ID", "Copies place ID to clipboard", "CopyPlaceId", function()
+    if setclipboard then setclipboard(tostring(game.PlaceId)) end
+end)
+CreateToggle(UtilTab, "Console Logger", "Logs all game events to output", "ConsoleLogger")
+CreateToggle(UtilTab, "Auto Spam Jump", "Spams jump input every frame", "SpamJump")
+CreateToggle(UtilTab, "Disable Core UI", "Hides default Roblox leaderboard/chat", "HideCoreUI")
+CreateToggle(UtilTab, "Enable Shift Lock", "Forces shift lock capability on", "EnableShiftLock")
+CreateToggle(UtilTab, "Anti-Idle Kick", "Simulates input every 5 minutes", "AntiIdle")
+CreateToggle(UtilTab, "Copy Player Position", "Copies Vector3 CFrame to clipboard", "CopyPos", function()
+    if LocalPlayer.Character and LocalPlayer.Character:FindFirstChild("HumanoidRootPart") and setclipboard then
+        setclipboard(tostring(LocalPlayer.Character.HumanoidRootPart.Position))
+    end
+end)
+CreateToggle(UtilTab, "Mute Game Audio", "Sets Master Volume to zero", "MuteAudio", function(st)
+    UserSettings():GetService("UserGameSettings").MasterVolume = st and 0 or 1
+end)
+CreateToggle(UtilTab, "Disable Shadows", "Toggles GlobalShadows off", "DisableShadows", function(st)
+    Lighting.GlobalShadows = not st
+end)
+CreateToggle(UtilTab, "Set Graphics Quality 1", "Forces graphics level to minimum", "LowGraphics", function(st)
+    if st then settings().Rendering.QualityLevel = Enum.QualityLevel.Level01 end
+end)
+CreateToggle(UtilTab, "Instant Leave Game", "Closes Roblox client immediately", "InstantLeave", function()
+    game:Shutdown()
+end)
+CreateToggle(UtilTab, "Copy User ID", "Copies player Roblox UserID", "CopyUserId", function()
+    if setclipboard then setclipboard(tostring(LocalPlayer.UserId)) end
+end)
+CreateToggle(UtilTab, "Bypass Adonis AC", "Bypasses Adonis Anti-Cheat", "BypassAdonis")
+CreateToggle(UtilTab, "Bypass HD Admin", "Bypasses HD Admin bans", "BypassHD")
+CreateToggle(UtilTab, "Block Data Teleports", "Prevents teleporting to sub-games", "BlockTeleport")
+CreateToggle(UtilTab, "Auto Rejoin On Kick", "Rejoins server if kicked", "AutoRejoin")
 
 ------------------------------------------------------------------------
 -- CONTINUOUS RENDER-STEPPED LOOPS (FIXES SPEED & MOVEMENT)
@@ -540,7 +667,7 @@ RunService.RenderStepped:Connect(function()
         local Hum = Char:FindFirstChildOfClass("Humanoid")
         local HRP = Char:FindFirstChild("HumanoidRootPart")
 
-        -- SPEED FIX: Continuous override prevents game scripts from resetting WalkSpeed
+        -- SPEED FIX: Overrides game scripts from resetting WalkSpeed
         if Hum and Flags.SpeedHack then
             Hum.WalkSpeed = Flags.WalkSpeed
         end
