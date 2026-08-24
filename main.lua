@@ -1,5 +1,5 @@
 --====================================================================--
--- VARGIN SCRIPT HUB - FIXED EDITION
+-- VARGIN SCRIPT HUB - WORKING FUNCTIONAL EDITION
 --====================================================================--
 
 local Players = game:GetService("Players")
@@ -12,7 +12,7 @@ local Lighting = game:GetService("Lighting")
 local StarterGui = game:GetService("StarterGui")
 
 local LocalPlayer = Players.LocalPlayer
-local Flags = {}
+local Camera = Workspace.CurrentCamera
 
 -- Friend Request Style Notification
 pcall(function()
@@ -24,21 +24,15 @@ pcall(function()
     })
 end)
 
+local Flags = {}
+
 ------------------------------------------------------------------------
 -- VERIFICATION UI
 ------------------------------------------------------------------------
 local ScreenGui = Instance.new("ScreenGui")
 ScreenGui.Name = "VarginScriptHub_UI"
 ScreenGui.ResetOnSpawn = false
-
--- Fallback UI parent selection
-local parentTarget = CoreGui
-if gethui then
-    parentTarget = gethui()
-elseif LocalPlayer:FindFirstChild("PlayerGui") then
-    parentTarget = LocalPlayer.PlayerGui
-end
-ScreenGui.Parent = parentTarget
+ScreenGui.Parent = (gethui and gethui()) or CoreGui or LocalPlayer:WaitForChild("PlayerGui")
 
 local VerifyFrame = Instance.new("Frame")
 VerifyFrame.Size = UDim2.new(0, 340, 0, 210)
@@ -74,7 +68,6 @@ AnswerInput.Position = UDim2.new(0, 30, 0, 90)
 AnswerInput.BackgroundColor3 = Color3.fromRGB(26, 22, 42)
 AnswerInput.TextColor3 = Color3.fromRGB(255, 255, 255)
 AnswerInput.PlaceholderText = "Type answer..."
-AnswerInput.Text = ""
 AnswerInput.Parent = VerifyFrame
 
 local VerifyBtn = Instance.new("TextButton")
@@ -98,12 +91,10 @@ GenerateEasyQuestion()
 -- MAIN HUB
 ------------------------------------------------------------------------
 local MainHub = Instance.new("Frame")
-MainHub.Size = UDim2.new(0, 400, 0, 300)
-MainHub.Position = UDim2.new(0.5, -200, 0.5, -150)
+MainHub.Size = UDim2.new(0, 600, 0, 380)
+MainHub.Position = UDim2.new(0.5, -300, 0.5, -190)
 MainHub.BackgroundColor3 = Color3.fromRGB(14, 11, 23)
 MainHub.Visible = false
-MainHub.Active = true
-MainHub.Draggable = true -- Enables UI dragging
 MainHub.Parent = ScreenGui
 
 local HubCorner = Instance.new("UICorner")
@@ -152,19 +143,19 @@ end
 -- WORKING FEATURE IMPLEMENTATIONS
 ------------------------------------------------------------------------
 
--- 1. Working Speed Hack
+-- 1. Working Velocity Speed Hack
 CreateToggle("Working Speed Hack", "SpeedHack")
-RunService.Heartbeat:Connect(function(deltaTime)
+RunService.Heartbeat:Connect(function(dt)
     if Flags.SpeedHack and LocalPlayer.Character then
         local hrp = LocalPlayer.Character:FindFirstChild("HumanoidRootPart")
         local hum = LocalPlayer.Character:FindFirstChildOfClass("Humanoid")
         if hrp and hum and hum.MoveDirection.Magnitude > 0 then
-            hrp.CFrame = hrp.CFrame + (hum.MoveDirection * (50 * deltaTime))
+            hrp.CFrame = hrp.CFrame + (hum.MoveDirection * (45 * dt))
         end
     end
 end)
 
--- 2. Functional Noclip
+-- 2. Functional CFrame Noclip
 CreateToggle("Working Noclip", "Noclip")
 RunService.Stepped:Connect(function()
     if Flags.Noclip and LocalPlayer.Character then
@@ -192,42 +183,42 @@ local ESPFolder = Instance.new("Folder")
 ESPFolder.Name = "VarginESP"
 ESPFolder.Parent = ScreenGui
 
-local function AddESP(plr)
-    if plr == LocalPlayer then return end
+local function AttachHighlight(targetPlayer)
+    if targetPlayer == LocalPlayer then return end
     
-    local function ApplyHighlight(character)
-        if not character then return end
-        local existing = ESPFolder:FindFirstChild(plr.Name)
-        if existing then existing:Destroy() end
-        
+    local function Apply(char)
+        if not char then return end
+        local old = ESPFolder:FindFirstChild(targetPlayer.Name)
+        if old then old:Destroy() end
+
         local Highlight = Instance.new("Highlight")
-        Highlight.Name = plr.Name
+        Highlight.Name = targetPlayer.Name
         Highlight.FillColor = Color3.fromRGB(150, 90, 255)
         Highlight.OutlineColor = Color3.fromRGB(255, 255, 255)
-        Highlight.Adornee = character
+        Highlight.Adornee = char
         Highlight.Parent = ESPFolder
     end
 
-    if plr.Character then ApplyHighlight(plr.Character) end
-    plr.CharacterAdded:Connect(ApplyHighlight)
+    if targetPlayer.Character then Apply(targetPlayer.Character) end
+    targetPlayer.CharacterAdded:Connect(Apply)
 end
 
 CreateToggle("Working Player ESP", "ESP", function(state)
     ESPFolder:ClearAllChildren()
     if state then
         for _, p in pairs(Players:GetPlayers()) do
-            AddESP(p)
+            AttachHighlight(p)
         end
     end
 end)
 
 Players.PlayerAdded:Connect(function(p)
-    if Flags.ESP then AddESP(p) end
+    if Flags.ESP then AttachHighlight(p) end
 end)
 
 Players.PlayerRemoving:Connect(function(p)
-    local existing = ESPFolder:FindFirstChild(p.Name)
-    if existing then existing:Destroy() end
+    local old = ESPFolder:FindFirstChild(p.Name)
+    if old then old:Destroy() end
 end)
 
 -- 5. Fullbright
@@ -252,7 +243,7 @@ VerifyBtn.MouseButton1Click:Connect(function()
         MainHub.Visible = true
     else
         AnswerInput.Text = ""
-        AnswerInput.PlaceholderText = "Bro is rly a robot 😭"
+        AnswerInput.PlaceholderText = "Bro get out robot 😭😭"
         GenerateEasyQuestion()
     end
 end)
