@@ -143,14 +143,14 @@ end
 -- WORKING FEATURE IMPLEMENTATIONS
 ------------------------------------------------------------------------
 
--- 1. Working Velocity Speed Hack
+-- 1. Working Velocity Speed Hack (Bypasses standard speed checks)
 CreateToggle("Working Speed Hack", "SpeedHack")
-RunService.Heartbeat:Connect(function(dt)
-    if Flags.SpeedHack and LocalPlayer.Character then
-        local hrp = LocalPlayer.Character:FindFirstChild("HumanoidRootPart")
+RunService.Heartbeat:Connect(function()
+    if Flags.SpeedHack and LocalPlayer.Character and LocalPlayer.Character:FindFirstChild("HumanoidRootPart") then
+        local hrp = LocalPlayer.Character.HumanoidRootPart
         local hum = LocalPlayer.Character:FindFirstChildOfClass("Humanoid")
-        if hrp and hum and hum.MoveDirection.Magnitude > 0 then
-            hrp.CFrame = hrp.CFrame + (hum.MoveDirection * (45 * dt))
+        if hum and hum.MoveDirection.Magnitude > 0 then
+            hrp.CFrame = hrp.CFrame + (hum.MoveDirection * 1.5)
         end
     end
 end)
@@ -170,55 +170,34 @@ end)
 -- 3. Functional Infinite Jump
 CreateToggle("Working Infinite Jump", "InfJump")
 UserInputService.JumpRequest:Connect(function()
-    if Flags.InfJump and LocalPlayer.Character then
-        local hum = LocalPlayer.Character:FindFirstChildOfClass("Humanoid")
-        if hum then
-            hum:ChangeState(Enum.HumanoidStateType.Jumping)
-        end
+    if Flags.InfJump and LocalPlayer.Character and LocalPlayer.Character:FindFirstChildOfClass("Humanoid") then
+        LocalPlayer.Character:FindFirstChildOfClass("Humanoid"):ChangeState(Enum.HumanoidStateType.Jumping)
     end
 end)
 
 -- 4. Functional Player ESP Highlights
-local ESPFolder = Instance.new("Folder")
+local ESPFolder = Instance.new("Folder", CoreGui)
 ESPFolder.Name = "VarginESP"
-ESPFolder.Parent = ScreenGui
-
-local function AttachHighlight(targetPlayer)
-    if targetPlayer == LocalPlayer then return end
-    
-    local function Apply(char)
-        if not char then return end
-        local old = ESPFolder:FindFirstChild(targetPlayer.Name)
-        if old then old:Destroy() end
-
-        local Highlight = Instance.new("Highlight")
-        Highlight.Name = targetPlayer.Name
-        Highlight.FillColor = Color3.fromRGB(150, 90, 255)
-        Highlight.OutlineColor = Color3.fromRGB(255, 255, 255)
-        Highlight.Adornee = char
-        Highlight.Parent = ESPFolder
-    end
-
-    if targetPlayer.Character then Apply(targetPlayer.Character) end
-    targetPlayer.CharacterAdded:Connect(Apply)
-end
 
 CreateToggle("Working Player ESP", "ESP", function(state)
     ESPFolder:ClearAllChildren()
-    if state then
-        for _, p in pairs(Players:GetPlayers()) do
-            AttachHighlight(p)
+    if not state then return end
+    
+    local function AddESP(plr)
+        if plr ~= LocalPlayer and plr.Character then
+            local Highlight = Instance.new("Highlight")
+            Highlight.Name = plr.Name
+            Highlight.FillColor = Color3.fromRGB(150, 90, 255)
+            Highlight.OutlineColor = Color3.fromRGB(255, 255, 255)
+            Highlight.Adornee = plr.Character
+            Highlight.Parent = ESPFolder
         end
     end
-end)
 
-Players.PlayerAdded:Connect(function(p)
-    if Flags.ESP then AttachHighlight(p) end
-end)
-
-Players.PlayerRemoving:Connect(function(p)
-    local old = ESPFolder:FindFirstChild(p.Name)
-    if old then old:Destroy() end
+    for _, p in pairs(Players:GetPlayers()) do AddESP(p) end
+    Players.PlayerAdded:Connect(function(p)
+        p.CharacterAdded:Connect(function() task.wait(0.5); if Flags.ESP then AddESP(p) end end)
+    end)
 end)
 
 -- 5. Fullbright
@@ -243,7 +222,7 @@ VerifyBtn.MouseButton1Click:Connect(function()
         MainHub.Visible = true
     else
         AnswerInput.Text = ""
-        AnswerInput.PlaceholderText = "Bro get out robot 😭😭"
+        AnswerInput.PlaceholderText = "❌ Try again!"
         GenerateEasyQuestion()
     end
 end)
