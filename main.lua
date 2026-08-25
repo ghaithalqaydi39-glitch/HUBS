@@ -1,5 +1,5 @@
 --====================================================================--
--- VARGIN SCRIPT HUB - EXTENDED EDITION
+-- VARGIN SCRIPT HUB - Script made by HiddenPulse
 --====================================================================--
 
 local Players = game:GetService("Players")
