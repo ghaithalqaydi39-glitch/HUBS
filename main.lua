@@ -1,827 +1,710 @@
---====================================================================--
--- VARGIN SCRIPT HUB - PRO WINDUI EDITION (ULTRA KEY UI)
--- Author: made by Fentys and HiddenPulse • “Join discord for lifetime/monthly keys!”
--- Discord: https://discord.gg/pHuxGjqsc8
---====================================================================--
+-- [[==================================================================]]
+-- [[                      VARGIN HUB                      ]]
+-- [[          Next-Gen Cyber Glassmorphism WindUI Script Hub         ]]
+-- [[          Creators: Fentys & HiddenPulse                         ]]
+-- [[==================================================================]]
 
 local Players = game:GetService("Players")
-local Workspace = game:GetService("Workspace")
-local Lighting = game:GetService("Lighting")
 local RunService = game:GetService("RunService")
 local UserInputService = game:GetService("UserInputService")
-local TeleportService = game:GetService("TeleportService")
 local TweenService = game:GetService("TweenService")
-local CoreGui = game:GetService("CoreGui")
+local HttpService = game:GetService("HttpService")
+local Lighting = game:GetService("Lighting")
+local TeleportService = game:GetService("TeleportService")
+local ReplicatedStorage = game:GetService("ReplicatedStorage")
 
 local LocalPlayer = Players.LocalPlayer
-local Camera = Workspace.CurrentCamera or Workspace:WaitForChild("Camera")
-local DefaultGravity = Workspace.Gravity > 0 and Workspace.Gravity or 196.2
+local Camera = workspace.CurrentCamera
 
-local DiscordLink = "https://discord.gg/pHuxGjqsc8"
+-- Configuration & Constants
+local DISCORD_INVITE = "https://discord.gg/pHuxGjqsc8"
+local PLATOBOOST_SERVICE_ID = 31205 -- Your exact Platoboost Project ID from dashboard!
+local PLATOBOOST_SECRET = "your-platoboost-secret"
 
--- Master & Standard Keys
-local MasterAdminKeys = {
-    ["FENTYS-ADMIN-MASTER-9999"] = true,
-    ["LO-DEV-OVERRIDE-2026"]     = true
-}
-
-local StandardKeys = {
-    ["VARGIN-FREE-KEY-2026"]     = true,
-    ["COMMUNITY-ACCESS-8831"]    = true
-}
-
-local CurrentSessionKey = "Not Verified"
-
-------------------------------------------------------------------------
--- 1. PREMIUM WINDUI-STYLED BEGIN MODAL
-------------------------------------------------------------------------
-local KeyScreenGui = Instance.new("ScreenGui")
-KeyScreenGui.Name = "VarginHub_BeginUI"
-KeyScreenGui.ResetOnSpawn = false
-
-pcall(function()
-    if gethui then
-        KeyScreenGui.Parent = gethui()
-    elseif CoreGui:FindFirstChild("RobloxGui") then
-        KeyScreenGui.Parent = CoreGui
-    else
-        KeyScreenGui.Parent = LocalPlayer:WaitForChild("PlayerGui")
+-- Clipboard helper across executors
+local function copyToClipboard(text)
+    if setclipboard then
+        setclipboard(text)
+        return true
+    elseif toclipboard then
+        toclipboard(text)
+        return true
+    elseif syn and syn.write_clipboard then
+        syn.write_clipboard(text)
+        return true
     end
-end)
-
-local Modal = Instance.new("Frame")
-Modal.Name = "WindUI_KeyModal"
-Modal.Size = UDim2.new(0, 440, 0, 320)
-Modal.Position = UDim2.new(0.5, -220, 0.5, -160)
-Modal.BackgroundColor3 = Color3.fromRGB(13, 10, 22)
-Modal.BorderSizePixel = 0
-Modal.ClipsDescendants = true
-Modal.Parent = KeyScreenGui
-
-local ModalCorner = Instance.new("UICorner")
-ModalCorner.CornerRadius = UDim.new(0, 14)
-ModalCorner.Parent = Modal
-
-local ModalStroke = Instance.new("UIStroke")
-ModalStroke.Color = Color3.fromRGB(139, 92, 246)
-ModalStroke.Thickness = 1.6
-ModalStroke.Parent = Modal
-
--- Topbar
-local Topbar = Instance.new("Frame")
-Topbar.Size = UDim2.new(1, 0, 0, 44)
-Topbar.BackgroundColor3 = Color3.fromRGB(18, 14, 30)
-Topbar.BorderSizePixel = 0
-Topbar.Parent = Modal
-
-local TopbarCorner = Instance.new("UICorner")
-TopbarCorner.CornerRadius = UDim.new(0, 14)
-TopbarCorner.Parent = Topbar
-
-local TopTitle = Instance.new("TextLabel")
-TopTitle.Position = UDim2.new(0, 16, 0, 0)
-TopTitle.Size = UDim2.new(1, -32, 1, 0)
-TopTitle.BackgroundTransparency = 1
-TopTitle.Text = "🛡️ VARGIN HUB <font color='#a78bfa'>• License Gateway</font>"
-TopTitle.RichText = true
-TopTitle.TextColor3 = Color3.fromRGB(255, 255, 255)
-TopTitle.Font = Enum.Font.GothamBold
-TopTitle.TextSize = 14
-TopTitle.TextXAlignment = Enum.TextXAlignment.Left
-TopTitle.Parent = Topbar
-
--- Callout Banner
-local CalloutBanner = Instance.new("Frame")
-CalloutBanner.Size = UDim2.new(1, -32, 0, 56)
-CalloutBanner.Position = UDim2.new(0, 16, 0, 56)
-CalloutBanner.BackgroundColor3 = Color3.fromRGB(22, 17, 38)
-CalloutBanner.BorderSizePixel = 0
-CalloutBanner.Parent = Modal
-
-local BannerCorner = Instance.new("UICorner")
-BannerCorner.CornerRadius = UDim.new(0, 8)
-BannerCorner.Parent = CalloutBanner
-
-local BannerStroke = Instance.new("UIStroke")
-BannerStroke.Color = Color3.fromRGB(80, 50, 150)
-BannerStroke.Thickness = 1
-BannerStroke.Parent = CalloutBanner
-
-local BannerHeader = Instance.new("TextLabel")
-BannerHeader.Position = UDim2.new(0, 12, 0, 8)
-BannerHeader.Size = UDim2.new(1, -24, 0, 18)
-BannerHeader.BackgroundTransparency = 1
-BannerHeader.Text = "🎟️ Join discord for lifetime/monthly keys!"
-BannerHeader.TextColor3 = Color3.fromRGB(245, 158, 11)
-BannerHeader.Font = Enum.Font.GothamBold
-BannerHeader.TextSize = 13
-BannerHeader.TextXAlignment = Enum.TextXAlignment.Left
-BannerHeader.Parent = CalloutBanner
-
-local BannerDesc = Instance.new("TextLabel")
-BannerDesc.Position = UDim2.new(0, 12, 0, 28)
-BannerDesc.Size = UDim2.new(1, -24, 0, 18)
-BannerDesc.BackgroundTransparency = 1
-BannerDesc.Text = "Open a ticket in the server to purchase from Fentys directly."
-BannerDesc.TextColor3 = Color3.fromRGB(170, 160, 200)
-BannerDesc.Font = Enum.Font.Gotham
-BannerDesc.TextSize = 11
-BannerDesc.TextXAlignment = Enum.TextXAlignment.Left
-BannerDesc.Parent = CalloutBanner
-
--- Key Input
-local KeyBox = Instance.new("TextBox")
-KeyBox.Size = UDim2.new(1, -32, 0, 42)
-KeyBox.Position = UDim2.new(0, 16, 0, 124)
-KeyBox.BackgroundColor3 = Color3.fromRGB(20, 16, 34)
-KeyBox.TextColor3 = Color3.fromRGB(255, 255, 255)
-KeyBox.PlaceholderText = "Paste your license key here..."
-KeyBox.PlaceholderColor3 = Color3.fromRGB(110, 100, 140)
-KeyBox.Font = Enum.Font.Gotham
-KeyBox.TextSize = 13
-KeyBox.ClearTextOnFocus = false
-KeyBox.Parent = Modal
-
-local InputCorner = Instance.new("UICorner")
-InputCorner.CornerRadius = UDim.new(0, 8)
-InputCorner.Parent = KeyBox
-
-local InputStroke = Instance.new("UIStroke")
-InputStroke.Color = Color3.fromRGB(60, 48, 90)
-InputStroke.Thickness = 1
-InputStroke.Parent = KeyBox
-
-KeyBox.Focused:Connect(function()
-    TweenService:Create(InputStroke, TweenInfo.new(0.2), { Color = Color3.fromRGB(139, 92, 246) }):Play()
-end)
-
-KeyBox.FocusLost:Connect(function()
-    TweenService:Create(InputStroke, TweenInfo.new(0.2), { Color = Color3.fromRGB(60, 48, 90) }):Play()
-end)
-
--- Action Buttons
-local UnlockBtn = Instance.new("TextButton")
-UnlockBtn.Size = UDim2.new(0.48, -20, 0, 40)
-UnlockBtn.Position = UDim2.new(0, 16, 0, 180)
-UnlockBtn.BackgroundColor3 = Color3.fromRGB(139, 92, 246)
-UnlockBtn.Text = "⚡ Unlock Hub"
-UnlockBtn.TextColor3 = Color3.fromRGB(255, 255, 255)
-UnlockBtn.Font = Enum.Font.GothamBold
-UnlockBtn.TextSize = 13
-UnlockBtn.Parent = Modal
-
-local UnlockCorner = Instance.new("UICorner")
-UnlockCorner.CornerRadius = UDim.new(0, 8)
-UnlockCorner.Parent = UnlockBtn
-
-local DiscordBtn = Instance.new("TextButton")
-DiscordBtn.Size = UDim2.new(0.52, -12, 0, 40)
-DiscordBtn.Position = UDim2.new(0.48, 4, 0, 180)
-DiscordBtn.BackgroundColor3 = Color3.fromRGB(88, 101, 242)
-DiscordBtn.Text = "📩 Open Discord Ticket"
-DiscordBtn.TextColor3 = Color3.fromRGB(255, 255, 255)
-DiscordBtn.Font = Enum.Font.GothamBold
-DiscordBtn.TextSize = 12
-DiscordBtn.Parent = Modal
-
-local DiscCorner = Instance.new("UICorner")
-DiscCorner.CornerRadius = UDim.new(0, 8)
-DiscCorner.Parent = DiscordBtn
-
-local StatusLabel = Instance.new("TextLabel")
-StatusLabel.Size = UDim2.new(1, -32, 0, 30)
-StatusLabel.Position = UDim2.new(0, 16, 0, 235)
-StatusLabel.BackgroundTransparency = 1
-StatusLabel.Text = "Awaiting license verification..."
-StatusLabel.TextColor3 = Color3.fromRGB(140, 130, 170)
-StatusLabel.Font = Enum.Font.Gotham
-StatusLabel.TextSize = 11
-StatusLabel.Parent = Modal
-
-local FooterLabel = Instance.new("TextLabel")
-FooterLabel.Size = UDim2.new(1, 0, 0, 20)
-FooterLabel.Position = UDim2.new(0, 0, 0, 290)
-FooterLabel.BackgroundTransparency = 1
-FooterLabel.Text = "Vargin Hub • made by Fentys"
-FooterLabel.TextColor3 = Color3.fromRGB(90, 80, 120)
-FooterLabel.Font = Enum.Font.GothamMedium
-FooterLabel.TextSize = 10
-FooterLabel.Parent = Modal
-
-DiscordBtn.MouseButton1Click:Connect(function()
-    if setclipboard then setclipboard(DiscordLink) end
-    StatusLabel.Text = "✅ Discord invite copied! Open a ticket for Lifetime/Monthly."
-    StatusLabel.TextColor3 = Color3.fromRGB(120, 255, 150)
-end)
-
-------------------------------------------------------------------------
--- 2. MAIN WINDUI SCRIPT HUB
-------------------------------------------------------------------------
-local function LaunchHub(isAdmin)
-    KeyScreenGui:Destroy()
-
-    local WindUI
-    local cdnList = {
-        "https://raw.githubusercontent.com/Footagesus/WindUI/main/dist/main.lua",
-        "https://github.com/Footagesus/WindUI/raw/main/dist/main.lua",
-        "https://cdn.jsdelivr.net/gh/Footagesus/WindUI@main/dist/main.lua"
-    }
-
-    for _, url in ipairs(cdnList) do
-        local success, res = pcall(function()
-            return loadstring(game:HttpGet(url))()
-        end)
-        if success and res then
-            WindUI = res
-            break
-        end
-    end
-
-    if not WindUI then
-        warn("[Vargin Hub Error] All CDN mirrors failed.")
-        return
-    end
-
-    local State = {
-        SpeedHack = false,
-        WalkSpeed = 50,
-        JumpPowerHack = false,
-        JumpPower = 100,
-        InfiniteJump = false,
-        LowGravity = false,
-        GravityValue = 50,
-        Noclip = false,
-        FreezePosition = false,
-        PlayerESP = false,
-        HeadDotESP = false,
-        Fullbright = false,
-        NoFog = false,
-        AutoClicker = false,
-        ClickCPS = 10,
-        HitboxExpander = false,
-        HitboxSize = 5,
-        Spinbot = false,
-        SpinSpeed = 30,
-        FOVToggle = false,
-        FieldOfView = 70,
-        AntiAFK = false,
-        SavedCFrame = nil
-    }
-
-    local function GetHumanoid()
-        local char = LocalPlayer.Character
-        return char and char:FindFirstChildOfClass("Humanoid")
-    end
-
-    local function GetHRP()
-        local char = LocalPlayer.Character
-        return char and char:FindFirstChild("HumanoidRootPart")
-    end
-
-    local function ApplySpeed()
-        local hum = GetHumanoid()
-        if hum then
-            hum.WalkSpeed = State.SpeedHack and State.WalkSpeed or 16
-        end
-    end
-
-    local function ApplyJump()
-        local hum = GetHumanoid()
-        if hum then
-            if State.JumpPowerHack then
-                hum.UseJumpPower = true
-                hum.JumpPower = State.JumpPower
-                hum.JumpHeight = (State.JumpPower / 100) * 7.2
-            else
-                hum.JumpPower = 50
-                hum.JumpHeight = 7.2
-            end
-        end
-    end
-
-    LocalPlayer.CharacterAdded:Connect(function()
-        task.wait(0.5)
-        ApplySpeed()
-        ApplyJump()
-    end)
-
-    local Window = WindUI:CreateWindow({
-        Title = "VARGIN SCRIPT HUB",
-        Icon = "shield-alert",
-        Author = isAdmin and "ADMIN MASTER • made by Fentys" or "made by Fentys",
-        Folder = "VarginHubConfig",
-        Size = UDim2.fromOffset(600, 420),
-        Transparent = true,
-        Theme = "Dark"
-    })
-
-    WindUI:Notify({
-        Title = isAdmin and "👑 Admin Master Access" or "Vargin Hub Loaded",
-        Content = isAdmin and "Welcome back, Boss! All features unlocked." or "Session active • made by Fentys",
-        Duration = 4,
-        Icon = "check"
-    })
-
-    -- Hub Tabs
-    local KeyTab      = Window:Tab({ Title = "Key & Support", Icon = "key" })
-    local MovementTab = Window:Tab({ Title = "Movement", Icon = "zap" })
-    local VisualsTab  = Window:Tab({ Title = "Visuals", Icon = "eye" })
-    local CombatTab   = Window:Tab({ Title = "Combat", Icon = "swords" })
-    local PlayerTab   = Window:Tab({ Title = "Player", Icon = "user" })
-    local WorldTab    = Window:Tab({ Title = "World", Icon = "globe" })
-    local StealthTab  = Window:Tab({ Title = "Stealth", Icon = "shield" })
-    local TeleportTab = Window:Tab({ Title = "Teleports", Icon = "map-pin" })
-    local UtilityTab  = Window:Tab({ Title = "Utility", Icon = "settings" })
-
-    -- Key & Support Tab
-    KeyTab:Button({
-        Title = "Open Ticket / Join Discord",
-        Desc = "Copies discord.gg/pHuxGjqsc8 to purchase keys",
-        Callback = function()
-            if setclipboard then
-                setclipboard(DiscordLink)
-                WindUI:Notify({ Title = "Discord Copied", Content = "discord.gg/pHuxGjqsc8", Duration = 3 })
-            end
-        end
-    })
-
-    KeyTab:Button({
-        Title = "Copy Active Session Key",
-        Desc = "Copies key: " .. CurrentSessionKey,
-        Callback = function()
-            if setclipboard then
-                setclipboard(CurrentSessionKey)
-                WindUI:Notify({ Title = "Key Copied", Content = CurrentSessionKey, Duration = 3 })
-            end
-        end
-    })
-
-    -- Movement Tab
-    MovementTab:Toggle({
-        Title = "Speed Hack",
-        Desc = "Force walk velocity state",
-        Value = false,
-        Callback = function(v)
-            State.SpeedHack = v
-            ApplySpeed()
-        end
-    })
-
-    MovementTab:Slider({
-        Title = "WalkSpeed Target",
-        Desc = "Adjust target movement rate",
-        Step = 1,
-        Value = { Min = 16, Max = 350, Default = 50 },
-        Callback = function(val)
-            State.WalkSpeed = val
-            if State.SpeedHack then ApplySpeed() end
-        end
-    })
-
-    MovementTab:Toggle({
-        Title = "JumpPower Hack",
-        Desc = "Force vertical jump height",
-        Value = false,
-        Callback = function(v)
-            State.JumpPowerHack = v
-            ApplyJump()
-        end
-    })
-
-    MovementTab:Slider({
-        Title = "JumpPower Target",
-        Desc = "Adjust vertical jump height",
-        Step = 1,
-        Value = { Min = 50, Max = 400, Default = 100 },
-        Callback = function(val)
-            State.JumpPower = val
-            if State.JumpPowerHack then ApplyJump() end
-        end
-    })
-
-    MovementTab:Toggle({
-        Title = "Infinite Air Jump",
-        Desc = "Jump continuously in the air",
-        Value = false,
-        Callback = function(v) State.InfiniteJump = v end
-    })
-
-    MovementTab:Toggle({
-        Title = "Noclip",
-        Desc = "Walk through walls and obstacles",
-        Value = false,
-        Callback = function(v) State.Noclip = v end
-    })
-
-    MovementTab:Toggle({
-        Title = "Custom Gravity",
-        Desc = "Override Workspace environment gravity",
-        Value = false,
-        Callback = function(v)
-            State.LowGravity = v
-            if not v then
-                Workspace.Gravity = DefaultGravity
-            else
-                Workspace.Gravity = State.GravityValue
-            end
-        end
-    })
-
-    MovementTab:Slider({
-        Title = "Gravity Level",
-        Desc = "Target gravity coefficient",
-        Step = 1,
-        Value = { Min = 1, Max = 196, Default = 50 },
-        Callback = function(val)
-            State.GravityValue = val
-            if State.LowGravity then
-                Workspace.Gravity = val
-            end
-        end
-    })
-
-    MovementTab:Toggle({
-        Title = "Freeze Position",
-        Desc = "Lock physical velocity to zero",
-        Value = false,
-        Callback = function(v) State.FreezePosition = v end
-    })
-
-    -- Visuals Tab
-    local ESPFolder = Instance.new("Folder")
-    ESPFolder.Name = "VarginHub_ESP"
-    pcall(function() ESPFolder.Parent = CoreGui end)
-
-    local function UpdateESP()
-        ESPFolder:ClearAllChildren()
-        for _, p in ipairs(Players:GetPlayers()) do
-            if p ~= LocalPlayer and p.Character then
-                if State.PlayerESP then
-                    local highlight = Instance.new("Highlight")
-                    highlight.Name = "Highlight_" .. p.Name
-                    highlight.Adornee = p.Character
-                    highlight.FillColor = Color3.fromRGB(150, 90, 255)
-                    highlight.OutlineColor = Color3.fromRGB(255, 255, 255)
-                    highlight.FillTransparency = 0.5
-                    highlight.OutlineTransparency = 0
-                    highlight.Parent = ESPFolder
-                end
-
-                if State.HeadDotESP and p.Character:FindFirstChild("Head") then
-                    local bb = Instance.new("BillboardGui")
-                    bb.Name = "Dot_" .. p.Name
-                    bb.Adornee = p.Character.Head
-                    bb.Size = UDim2.new(0, 10, 0, 10)
-                    bb.AlwaysOnTop = true
-                    bb.Parent = ESPFolder
-
-                    local dot = Instance.new("Frame")
-                    dot.Size = UDim2.new(1, 0, 1, 0)
-                    dot.BackgroundColor3 = Color3.fromRGB(255, 50, 50)
-                    dot.BorderSizePixel = 0
-                    dot.Parent = bb
-
-                    local corner = Instance.new("UICorner")
-                    corner.CornerRadius = UDim.new(1, 0)
-                    corner.Parent = dot
-                end
-            end
-        end
-    end
-
-    VisualsTab:Toggle({
-        Title = "Player Highlights (ESP)",
-        Desc = "Renders silhouettes through walls",
-        Value = false,
-        Callback = function(v)
-            State.PlayerESP = v
-            UpdateESP()
-        end
-    })
-
-    VisualsTab:Toggle({
-        Title = "Head Dot ESP",
-        Desc = "Draws red tracking dot over enemy heads",
-        Value = false,
-        Callback = function(v)
-            State.HeadDotESP = v
-            UpdateESP()
-        end
-    })
-
-    Players.PlayerAdded:Connect(function(player)
-        player.CharacterAdded:Connect(function()
-            task.wait(0.5)
-            UpdateESP()
-        end)
-    end)
-
-    Players.PlayerRemoving:Connect(function()
-        task.wait(0.2)
-        UpdateESP()
-    end)
-
-    VisualsTab:Toggle({
-        Title = "Fullbright Mode",
-        Desc = "Eliminate dark lighting and shadows",
-        Value = false,
-        Callback = function(v)
-            State.Fullbright = v
-            Lighting.Ambient = v and Color3.fromRGB(255, 255, 255) or Color3.fromRGB(127, 127, 127)
-        end
-    })
-
-    VisualsTab:Toggle({
-        Title = "Disable Atmosphere Fog",
-        Desc = "Extends fog rendering bounds infinitely",
-        Value = false,
-        Callback = function(v)
-            State.NoFog = v
-            Lighting.FogEnd = v and 9e9 or 10000
-        end
-    })
-
-    -- Combat Tab
-    CombatTab:Toggle({
-        Title = "Auto Clicker",
-        Desc = "Executes rapid virtual mouse clicks",
-        Value = false,
-        Callback = function(v) State.AutoClicker = v end
-    })
-
-    CombatTab:Slider({
-        Title = "Click Speed (CPS)",
-        Desc = "Clicks triggered per second",
-        Step = 1,
-        Value = { Min = 1, Max = 35, Default = 10 },
-        Callback = function(val) State.ClickCPS = val end
-    })
-
-    CombatTab:Toggle({
-        Title = "Head Hitbox Expander",
-        Desc = "Scales enemy head hitboxes",
-        Value = false,
-        Callback = function(v)
-            State.HitboxExpander = v
-            if not v then
-                for _, p in ipairs(Players:GetPlayers()) do
-                    if p ~= LocalPlayer and p.Character and p.Character:FindFirstChild("Head") then
-                        p.Character.Head.Size = Vector3.new(2, 1, 1)
-                        p.Character.Head.Transparency = 0
-                    end
-                end
-            end
-        end
-    })
-
-    CombatTab:Slider({
-        Title = "Hitbox Multiplier",
-        Desc = "Scale size for head hitboxes",
-        Step = 1,
-        Value = { Min = 2, Max = 25, Default = 5 },
-        Callback = function(val) State.HitboxSize = val end
-    })
-
-    -- Player Tab
-    PlayerTab:Toggle({
-        Title = "Spinbot",
-        Desc = "Spins character rapidly in place",
-        Value = false,
-        Callback = function(v) State.Spinbot = v end
-    })
-
-    PlayerTab:Slider({
-        Title = "Spin Speed",
-        Desc = "Rotation speed angle rate",
-        Step = 1,
-        Value = { Min = 5, Max = 120, Default = 30 },
-        Callback = function(val) State.SpinSpeed = val end
-    })
-
-    PlayerTab:Toggle({
-        Title = "Custom Camera FOV",
-        Desc = "Overrides field of view angle",
-        Value = false,
-        Callback = function(v)
-            State.FOVToggle = v
-            if Camera then Camera.FieldOfView = v and State.FieldOfView or 70 end
-        end
-    })
-
-    PlayerTab:Slider({
-        Title = "FOV Angle",
-        Desc = "Adjust camera view angle",
-        Step = 1,
-        Value = { Min = 40, Max = 125, Default = 70 },
-        Callback = function(val)
-            State.FieldOfView = val
-            if State.FOVToggle and Camera then Camera.FieldOfView = val end
-        end
-    })
-
-    PlayerTab:Button({
-        Title = "Instant Force Reset",
-        Desc = "Forces character Humanoid health to 0",
-        Callback = function()
-            local hum = GetHumanoid()
-            if hum then hum.Health = 0 end
-        end
-    })
-
-    -- World Tab
-    WorldTab:Button({
-        Title = "Set Midday (12:00)",
-        Desc = "Locks lighting cycle to noon",
-        Callback = function() Lighting.ClockTime = 12 end
-    })
-
-    WorldTab:Button({
-        Title = "Set Midnight (00:00)",
-        Desc = "Locks lighting cycle to midnight",
-        Callback = function() Lighting.ClockTime = 0 end
-    })
-
-    -- Stealth Tab
-    StealthTab:Toggle({
-        Title = "Anti-AFK Protection",
-        Desc = "Prevents 20-minute idle kicks",
-        Value = false,
-        Callback = function(v) State.AntiAFK = v end
-    })
-
-    LocalPlayer.Idled:Connect(function()
-        if State.AntiAFK then
-            local VirtualUser = game:GetService("VirtualUser")
-            pcall(function()
-                VirtualUser:CaptureController()
-                VirtualUser:ClickButton2(Vector2.zero)
-            end)
-        end
-    end)
-
-    -- Teleports Tab
-    TeleportTab:Button({
-        Title = "Save Current Coordinates",
-        Desc = "Saves your active location",
-        Callback = function()
-            local hrp = GetHRP()
-            if hrp then
-                State.SavedCFrame = hrp.CFrame
-                WindUI:Notify({ Title = "Saved", Content = "Current position saved!", Duration = 2 })
-            end
-        end
-    })
-
-    TeleportTab:Button({
-        Title = "Teleport to Saved Coordinates",
-        Desc = "Restores saved character position",
-        Callback = function()
-            local hrp = GetHRP()
-            if State.SavedCFrame and hrp then
-                hrp.CFrame = State.SavedCFrame
-            else
-                WindUI:Notify({ Title = "Error", Content = "No position saved yet.", Duration = 2 })
-            end
-        end
-    })
-
-    TeleportTab:Button({
-        Title = "Teleport to World Spawn (0, 50, 0)",
-        Desc = "Warps to coordinates 0, 50, 0",
-        Callback = function()
-            local hrp = GetHRP()
-            if hrp then
-                hrp.CFrame = CFrame.new(0, 50, 0)
-            end
-        end
-    })
-
-    -- Utility Tab
-    UtilityTab:Button({
-        Title = "Copy Place ID",
-        Desc = "Copies current Game PlaceId to clipboard",
-        Callback = function()
-            if setclipboard then
-                setclipboard(tostring(game.PlaceId))
-                WindUI:Notify({ Title = "Copied", Content = "PlaceId copied.", Duration = 2 })
-            end
-        end
-    })
-
-    UtilityTab:Button({
-        Title = "Copy Job ID",
-        Desc = "Copies current Server JobId to clipboard",
-        Callback = function()
-            if setclipboard then
-                setclipboard(tostring(game.JobId))
-                WindUI:Notify({ Title = "Copied", Content = "JobId copied.", Duration = 2 })
-            end
-        end
-    })
-
-    UtilityTab:Button({
-        Title = "Rejoin Current Server",
-        Desc = "Reconnect to this server instance",
-        Callback = function()
-            TeleportService:TeleportToPlaceInstance(game.PlaceId, game.JobId, LocalPlayer)
-        end
-    })
-
-    -- Runtime Engine Loops
-    RunService.Stepped:Connect(function()
-        if State.LowGravity then
-            Workspace.Gravity = State.GravityValue
-        end
-
-        local char = LocalPlayer.Character
-        if char then
-            local hum = char:FindFirstChildOfClass("Humanoid")
-            local hrp = char:FindFirstChild("HumanoidRootPart")
-
-            if hum and State.SpeedHack then
-                hum.WalkSpeed = State.WalkSpeed
-            end
-
-            if hum and State.JumpPowerHack then
-                hum.UseJumpPower = true
-                hum.JumpPower = State.JumpPower
-            end
-
-            if State.Noclip then
-                for _, part in ipairs(char:GetDescendants()) do
-                    if part:IsA("BasePart") and part.CanCollide then
-                        part.CanCollide = false
-                    end
-                end
-            end
-
-            if State.Spinbot and hrp then
-                hrp.CFrame = hrp.CFrame * CFrame.Angles(0, math.rad(State.SpinSpeed), 0)
-            end
-
-            if State.FreezePosition and hrp then
-                hrp.AssemblyLinearVelocity = Vector3.zero
-            end
-
-            if State.HitboxExpander then
-                for _, p in ipairs(Players:GetPlayers()) do
-                    if p ~= LocalPlayer and p.Character then
-                        local head = p.Character:FindFirstChild("Head")
-                        if head and head:IsA("BasePart") then
-                            head.Size = Vector3.new(State.HitboxSize, State.HitboxSize, State.HitboxSize)
-                            head.Transparency = 0.6
-                            head.CanCollide = false
-                        end
-                    end
-                end
-            end
-        end
-    end)
-
-    UserInputService.JumpRequest:Connect(function()
-        if State.InfiniteJump then
-            local hum = GetHumanoid()
-            if hum then hum:ChangeState(Enum.HumanoidStateType.Jumping) end
-        end
-    end)
-
-    task.spawn(function()
-        while true do
-            if State.AutoClicker then
-                local VirtualUser = game:GetService("VirtualUser")
-                pcall(function()
-                    VirtualUser:CaptureController()
-                    VirtualUser:ClickButton1(Vector2.zero)
-                end)
-                task.wait(1 / math.clamp(State.ClickCPS, 1, 35))
-            else
-                task.wait(0.1)
-            end
-        end
-    end)
+    return false
 end
 
-------------------------------------------------------------------------
--- 3. KEY VERIFICATION EVENT
-------------------------------------------------------------------------
-UnlockBtn.MouseButton1Click:Connect(function()
-    local enteredKey = KeyBox.Text:gsub("%s+", "")
+-- Auto-copy Discord link on launch
+pcall(function()
+    copyToClipboard(DISCORD_INVITE)
+end)
 
-    if MasterAdminKeys[enteredKey] then
-        CurrentSessionKey = enteredKey
-        StatusLabel.Text = "👑 Master Admin Key Verified! Launching WindUI..."
-        StatusLabel.TextColor3 = Color3.fromRGB(255, 215, 0)
-        task.wait(0.5)
-        LaunchHub(true)
-    elseif StandardKeys[enteredKey] then
-        CurrentSessionKey = enteredKey
-        StatusLabel.Text = "✅ License Key Verified! Launching WindUI..."
-        StatusLabel.TextColor3 = Color3.fromRGB(120, 255, 150)
-        task.wait(0.5)
-        LaunchHub(false)
-    else
-        StatusLabel.Text = "❌ Invalid Key! Join discord for lifetime/monthly keys!"
-        StatusLabel.TextColor3 = Color3.fromRGB(255, 80, 80)
-        KeyBox.Text = ""
+-- Load WindUI Library
+local WindUISuccess, WindUI = pcall(function()
+    return loadstring(game:HttpGet("https://raw.githubusercontent.com/Footagesus/WindUI/main/dist/main.lua"))()
+end)
+
+if not WindUISuccess or not WindUI then
+    warn("[HiddenPulse] Critical: Failed to load WindUI.")
+    return
+end
+
+-- Register Custom "CyberPulse" Ultra-Aesthetic Theme
+WindUI:AddTheme({
+    Name = "CyberPulse",
+
+    Accent = WindUI:Gradient({
+        ["0"]   = { Color = Color3.fromHex("#00f2fe"), Transparency = 0 },
+        ["100"] = { Color = Color3.fromHex("#4facfe"), Transparency = 0 },
+    }, { Rotation = 45 }),
+
+    Dialog = WindUI:Gradient({
+        ["0"]   = { Color = Color3.fromHex("#0a0e17"), Transparency = 0.05 },
+        ["100"] = { Color = Color3.fromHex("#121824"), Transparency = 0.05 },
+    }, { Rotation = 90 }),
+
+    Outline    = Color3.fromHex("#00f2fe"),
+    Text       = Color3.fromHex("#f0f6fc"),
+    Placeholder = Color3.fromHex("#5865f2"),
+    Background = Color3.fromHex("#07090e"),
+    Button     = WindUI:Gradient({
+        ["0"]   = { Color = Color3.fromHex("#0f172a"), Transparency = 0 },
+        ["100"] = { Color = Color3.fromHex("#1e293b"), Transparency = 0 },
+    }, { Rotation = 90 }),
+    Icon       = Color3.fromHex("#00f2fe"),
+    Toggle     = Color3.fromHex("#00f2fe"),
+    Slider     = Color3.fromHex("#00f2fe"),
+    Checkbox   = Color3.fromHex("#00f2fe"),
+
+    PanelBackground            = Color3.fromHex("#0d1117"),
+    PanelBackgroundTransparency = 0.4,
+})
+
+WindUI:SetTheme("CyberPulse")
+
+-- Hub State
+local HubState = {
+    UserTier = "Verified User",
+    WalkSpeed = 16,
+    JumpPower = 50,
+    InfJump = false,
+    Noclip = false,
+    Fly = false,
+    FlySpeed = 50,
+    ESP = false,
+    Fullbright = false,
+    Spinbot = false,
+    SpinSpeed = 30,
+    OrbitTarget = nil,
+    OrbitAngle = 0,
+    OrbitDistance = 8,
+    OrbitSpeed = 5,
+    SpamChat = false,
+    SpamMessage = "HiddenPulse Hub ON TOP! discord.gg/pHuxGjqsc8",
+    OriginalLighting = {
+        Brightness = Lighting.Brightness,
+        ClockTime = Lighting.ClockTime,
+        FogEnd = Lighting.FogEnd,
+        GlobalShadows = Lighting.GlobalShadows,
+        Ambient = Lighting.Ambient
+    }
+}
+
+-- All Authorized Working Keys for WindUI
+local ALL_WORKING_KEYS = {
+    -- Owner Admin Keys (Forever)
+    "HP-OWNER-FOREVER-9999",
+    "HP-FENTYS-ADMIN-KEY",
+    "HP-HIDDENPULSE-ADMIN",
+
+    -- 24-Hour Keys (Day Passes & Platoboost Gifts)
+    "KEY_24h-key-232908", -- From your Platoboost Gifts dashboard!
+    "HP-24HR-9A2F-88C1-7B04",
+    "HP-24HR-3D1E-5F9A-4C82",
+    "HP-24HR-7C4B-1E2D-9A5F",
+    "HP-24HR-6F8A-9C3E-2B1D",
+    "HP-24HR-5E7D-4A2B-8C1F",
+
+    -- Monthly Keys (1,000 Robux Tier - 30 Days)
+    "HP-MNTH-4B7E-9F1A-2C5D",
+    "HP-MNTH-8A3D-6C2E-1F9B",
+    "HP-MNTH-2F5C-7E4A-9D1B",
+    "HP-MNTH-1D9B-3A8F-5C7E",
+    "HP-MNTH-6E2A-8D4C-3F1B",
+
+    -- Lifetime Keys (2,500 Robux Tier - Permanent)
+    "HP-LIFE-9F2B-7D4A-1E8C",
+    "HP-LIFE-3C8A-5E1D-7B4F",
+    "HP-LIFE-8E1F-4B7A-2D9C",
+    "HP-LIFE-5A7D-2C9E-8F1B",
+    "HP-LIFE-1B4F-8D2A-6E9C"
+}
+
+-- Window Definition with Cyber Glassmorphism
+local WindowConfig = {
+    Title = "HiddenPulse",
+    Author = "by Fentys & HiddenPulse",
+    Folder = "HiddenPulseHub",
+    Icon = "solar:bolt-bold",
+    Theme = "CyberPulse",
+    Size = UDim2.fromOffset(680, 500),
+    MinSize = Vector2.new(580, 400),
+    MaxSize = Vector2.new(900, 650),
+    Resizable = true,
+    AutoScale = true,
+    NewElements = true,
+    Acrylic = true,
+    Transparent = true,
+    SideBarWidth = 210,
+    ToggleKey = Enum.KeyCode.G, -- Press G to Open/Close
+
+    Background = WindUI:Gradient({
+        ["0"]   = { Color = Color3.fromHex("#07090e"), Transparency = 0.15 },
+        ["100"] = { Color = Color3.fromHex("#0d1527"), Transparency = 0.15 },
+    }, { Rotation = 135 }),
+
+    Topbar = {
+        Height = 48,
+        ButtonsType = "Mac"
+    },
+
+    OpenButton = {
+        Title = "⚡ HiddenPulse (G)",
+        Enabled = true,
+        Draggable = true,
+        Scale = 0.75,
+        StrokeThickness = 2,
+        CornerRadius = UDim.new(1, 0),
+        Color = ColorSequence.new(
+            Color3.fromHex("#00f2fe"),
+            Color3.fromHex("#4facfe")
+        ),
+    },
+
+    User = {
+        Enabled = true,
+        Anonymous = false
+    },
+
+    -- NATIVE WINDUI KEY SYSTEM
+    KeySystem = {
+        Title = "⚡ HiddenPulse — Key System",
+        Note = "Click 'Get key' to complete Platoboost for a free 24-hour key!\nOr enter your VIP Lifetime/Monthly key.",
+        URL = "https://discord.gg/pHuxGjqsc8",
+        SaveKey = false,
+
+        API = {
+            {
+                Title = "Get Platoboost Key (Free 24H)",
+                Desc = "Click to copy Platoboost checkpoint link.",
+                Type = "platoboost",
+                ServiceId = PLATOBOOST_SERVICE_ID,
+                Secret = PLATOBOOST_SECRET
+            }
+        },
+
+        Key = ALL_WORKING_KEYS
+    }
+}
+
+local Window = WindUI:CreateWindow(WindowConfig)
+
+-- Topbar Tags & Badges
+pcall(function()
+    Window:Tag({
+        Title = "⚡ CYBERPULSE",
+        Icon = "solar:shield-check-bold",
+        Color = Color3.fromHex("#00f2fe"),
+        Border = true,
+    })
+    Window:Tag({
+        Title = "[G] TOGGLE",
+        Icon = "solar:keyboard-bold",
+        Color = Color3.fromHex("#5865F2"),
+        Border = true,
+    })
+end)
+
+-- [[ ================================================================ ]]
+-- [[                          TAB 1: PLAYER                           ]]
+-- [[ ================================================================ ]]
+local PlayerTab = Window:Tab({
+    Title = "Player",
+    Icon = "solar:user-bold"
+})
+
+PlayerTab:Section({ Title = "Locomotion Engine" })
+
+PlayerTab:Slider({
+    Title = "Speed Multiplier (WalkSpeed)",
+    Step = 1,
+    Value = { Min = 16, Max = 250, Default = 16 },
+    Callback = function(val)
+        HubState.WalkSpeed = val
+        if LocalPlayer.Character and LocalPlayer.Character:FindFirstChild("Humanoid") then
+            LocalPlayer.Character.Humanoid.WalkSpeed = val
+        end
+    end
+})
+
+PlayerTab:Slider({
+    Title = "Jump Force (JumpPower)",
+    Step = 1,
+    Value = { Min = 50, Max = 350, Default = 50 },
+    Callback = function(val)
+        HubState.JumpPower = val
+        if LocalPlayer.Character and LocalPlayer.Character:FindFirstChild("Humanoid") then
+            LocalPlayer.Character.Humanoid.UseJumpPower = true
+            LocalPlayer.Character.Humanoid.JumpPower = val
+        end
+    end
+})
+
+PlayerTab:Toggle({
+    Title = "Infinite Air Jump",
+    Value = false,
+    Callback = function(state)
+        HubState.InfJump = state
+    end
+})
+
+UserInputService.JumpRequest:Connect(function()
+    if HubState.InfJump and LocalPlayer.Character and LocalPlayer.Character:FindFirstChild("Humanoid") then
+        LocalPlayer.Character.Humanoid:ChangeState(Enum.HumanoidStateType.Jumping)
     end
 end)
+
+PlayerTab:Section({ Title = "Flight & Collision" })
+
+PlayerTab:Toggle({
+    Title = "Phase Through Walls (Noclip)",
+    Value = false,
+    Callback = function(state)
+        HubState.Noclip = state
+    end
+})
+
+RunService.Stepped:Connect(function()
+    if HubState.Noclip and LocalPlayer.Character then
+        for _, part in ipairs(LocalPlayer.Character:GetDescendants()) do
+            if part:IsA("BasePart") and part.CanCollide then
+                part.CanCollide = false
+            end
+        end
+    end
+end)
+
+PlayerTab:Toggle({
+    Title = "CFrame True Flight",
+    Value = false,
+    Callback = function(state)
+        HubState.Fly = state
+    end
+})
+
+PlayerTab:Slider({
+    Title = "Flight Velocity",
+    Step = 5,
+    Value = { Min = 10, Max = 200, Default = 60 },
+    Callback = function(val)
+        HubState.FlySpeed = val
+    end
+})
+
+RunService.RenderStepped:Connect(function(dt)
+    if HubState.Fly and LocalPlayer.Character and LocalPlayer.Character:FindFirstChild("HumanoidRootPart") then
+        local hrp = LocalPlayer.Character.HumanoidRootPart
+        local moveDir = Vector3.new()
+
+        if UserInputService:IsKeyDown(Enum.KeyCode.W) then moveDir = moveDir + (Camera.CFrame.LookVector) end
+        if UserInputService:IsKeyDown(Enum.KeyCode.S) then moveDir = moveDir - (Camera.CFrame.LookVector) end
+        if UserInputService:IsKeyDown(Enum.KeyCode.A) then moveDir = moveDir - (Camera.CFrame.RightVector) end
+        if UserInputService:IsKeyDown(Enum.KeyCode.D) then moveDir = moveDir + (Camera.CFrame.RightVector) end
+        if UserInputService:IsKeyDown(Enum.KeyCode.Space) then moveDir = moveDir + Vector3.new(0, 1, 0) end
+        if UserInputService:IsKeyDown(Enum.KeyCode.LeftShift) then moveDir = moveDir - Vector3.new(0, 1, 0) end
+
+        if moveDir.Magnitude > 0 then
+            hrp.CFrame = hrp.CFrame + (moveDir.Unit * HubState.FlySpeed * dt)
+            hrp.Velocity = Vector3.new(0, 0, 0)
+        end
+    end
+end)
+
+PlayerTab:Button({
+    Title = "Instant Character Respawn",
+    Icon = "solar:trash-bin-trash-bold",
+    Callback = function()
+        if LocalPlayer.Character and LocalPlayer.Character:FindFirstChild("Humanoid") then
+            LocalPlayer.Character.Humanoid.Health = 0
+        end
+    end
+})
+
+-- [[ ================================================================ ]]
+-- [[                        TAB 2: TROLL MENU                         ]]
+-- [[ ================================================================ ]]
+local TrollTab = Window:Tab({
+    Title = "Troll Hub",
+    Icon = "solar:ghost-bold"
+})
+
+TrollTab:Section({ Title = "Target Selector" })
+
+local function GetTargetNames()
+    local names = {}
+    for _, p in ipairs(Players:GetPlayers()) do
+        if p ~= LocalPlayer then table.insert(names, p.Name) end
+    end
+    if #names == 0 then table.insert(names, "No Victims Online") end
+    return names
+end
+
+local trollVictim = nil
+local victimDropdown = TrollTab:Dropdown({
+    Title = "Select Target Victim",
+    Values = GetTargetNames(),
+    Value = 1,
+    Callback = function(name)
+        trollVictim = Players:FindFirstChild(name)
+    end
+})
+
+TrollTab:Button({
+    Title = "Scan Active Players",
+    Icon = "solar:refresh-bold",
+    Callback = function()
+        victimDropdown:SetValues(GetTargetNames())
+    end
+})
+
+TrollTab:Section({ Title = "Aggressive Trolls" })
+
+-- Fling Player
+TrollTab:Button({
+    Title = "💥 Orbit Fling Victim (Launch to Space)",
+    Icon = "solar:fire-bold",
+    Callback = function()
+        if not trollVictim or not trollVictim.Character or not trollVictim.Character:FindFirstChild("HumanoidRootPart") then
+            WindUI:Notify({ Title = "Error", Content = "Victim not found!", Duration = 3 })
+            return
+        end
+        if not LocalPlayer.Character or not LocalPlayer.Character:FindFirstChild("HumanoidRootPart") then return end
+
+        local targetHRP = trollVictim.Character.HumanoidRootPart
+        local myHRP = LocalPlayer.Character.HumanoidRootPart
+        local oldCFrame = myHRP.CFrame
+
+        WindUI:Notify({ Title = "Flinging", Content = "Obliterating " .. trollVictim.Name .. "...", Duration = 3 })
+
+        task.spawn(function()
+            local bvel = Instance.new("BodyAngularVelocity")
+            bvel.MaxTorque = Vector3.new(math.huge, math.huge, math.huge)
+            bvel.AngularVelocity = Vector3.new(99999, 99999, 99999)
+            bvel.Parent = myHRP
+
+            local startTick = tick()
+            while tick() - startTick < 2.5 and trollVictim.Character and trollVictim.Character:FindFirstChild("HumanoidRootPart") do
+                myHRP.CFrame = targetHRP.CFrame
+                RunService.RenderStepped:Wait()
+            end
+
+            bvel:Destroy()
+            task.wait(0.1)
+            myHRP.CFrame = oldCFrame
+        end)
+    end
+})
+
+-- Spinbot
+TrollTab:Toggle({
+    Title = "🌀 Hyper Spinbot (Beyblade)",
+    Value = false,
+    Callback = function(state)
+        HubState.Spinbot = state
+    end
+})
+
+TrollTab:Slider({
+    Title = "Spinbot Angular Velocity",
+    Step = 5,
+    Value = { Min = 10, Max = 150, Default = 40 },
+    Callback = function(val)
+        HubState.SpinSpeed = val
+    end
+})
+
+RunService.RenderStepped:Connect(function()
+    if HubState.Spinbot and LocalPlayer.Character and LocalPlayer.Character:FindFirstChild("HumanoidRootPart") then
+        LocalPlayer.Character.HumanoidRootPart.CFrame = LocalPlayer.Character.HumanoidRootPart.CFrame * CFrame.Angles(0, math.rad(HubState.SpinSpeed), 0)
+    end
+end)
+
+-- Orbit Target
+TrollTab:Toggle({
+    Title = "🪐 Planetary Orbit Around Victim",
+    Value = false,
+    Callback = function(state)
+        HubState.OrbitTarget = state and trollVictim or nil
+    end
+})
+
+RunService.RenderStepped:Connect(function(dt)
+    if HubState.OrbitTarget and HubState.OrbitTarget.Character and HubState.OrbitTarget.Character:FindFirstChild("HumanoidRootPart") then
+        if LocalPlayer.Character and LocalPlayer.Character:FindFirstChild("HumanoidRootPart") then
+            local targetHRP = HubState.OrbitTarget.Character.HumanoidRootPart
+            HubState.OrbitAngle = HubState.OrbitAngle + (HubState.OrbitSpeed * dt)
+            local offset = Vector3.new(math.cos(HubState.OrbitAngle) * HubState.OrbitDistance, 2, math.sin(HubState.OrbitAngle) * HubState.OrbitDistance)
+            LocalPlayer.Character.HumanoidRootPart.CFrame = CFrame.new(targetHRP.Position + offset, targetHRP.Position)
+        end
+    end
+end)
+
+-- Piggyback
+TrollTab:Button({
+    Title = "👑 Piggyback / Sit On Victim's Head",
+    Icon = "solar:user-hand-up-bold",
+    Callback = function()
+        if trollVictim and trollVictim.Character and trollVictim.Character:FindFirstChild("Head") then
+            if LocalPlayer.Character and LocalPlayer.Character:FindFirstChild("HumanoidRootPart") then
+                LocalPlayer.Character.HumanoidRootPart.CFrame = trollVictim.Character.Head.CFrame + Vector3.new(0, 2.5, 0)
+                if LocalPlayer.Character:FindFirstChild("Humanoid") then
+                    LocalPlayer.Character.Humanoid.Sit = true
+                end
+            end
+        end
+    end
+})
+
+-- Chat Spammer
+TrollTab:Section({ Title = "Chat Broadcast Spammer" })
+
+TrollTab:Input({
+    Title = "Custom Troll Broadcast",
+    Placeholder = "HiddenPulse Hub ON TOP! discord.gg/pHuxGjqsc8",
+    Callback = function(val)
+        if val and val ~= "" then HubState.SpamMessage = val end
+    end
+})
+
+TrollTab:Toggle({
+    Title = "📢 Toggle Automated Spammer",
+    Value = false,
+    Callback = function(state)
+        HubState.SpamChat = state
+        task.spawn(function()
+            while HubState.SpamChat do
+                pcall(function()
+                    if TextChatService and TextChatService.ChatInputBarConfiguration then
+                        local channel = TextChatService.TextChannels:FindFirstChild("RBXGeneral")
+                        if channel then channel:SendAsync(HubState.SpamMessage) end
+                    else
+                        ReplicatedStorage.DefaultChatSystemChatEvents.SayMessageRequest:FireServer(HubState.SpamMessage, "All")
+                    end
+                end)
+                task.wait(2.5)
+            end
+        end)
+    end
+})
+
+-- [[ ================================================================ ]]
+-- [[                         TAB 3: VISUALS                           ]]
+-- [[ ================================================================ ]]
+local VisualsTab = Window:Tab({
+    Title = "Visuals",
+    Icon = "solar:eye-bold"
+})
+
+local ESPFolder = Instance.new("Folder")
+ESPFolder.Name = "HiddenPulse_Chams"
+pcall(function() ESPFolder.Parent = game:GetService("CoreGui") end)
+
+local function ApplyHighlight(character, player)
+    if player == LocalPlayer then return end
+    if not character:FindFirstChild("HP_Chams") then
+        local highlight = Instance.new("Highlight")
+        highlight.Name = "HP_Chams"
+        highlight.FillColor = Color3.fromHex("#00f2fe")
+        highlight.OutlineColor = Color3.fromHex("#ffffff")
+        highlight.FillTransparency = 0.4
+        highlight.OutlineTransparency = 0
+        highlight.Parent = character
+    end
+end
+
+local function RemoveHighlight(character)
+    local h = character:FindFirstChild("HP_Chams")
+    if h then h:Destroy() end
+end
+
+VisualsTab:Toggle({
+    Title = "Neon Player Chams (Wallhack ESP)",
+    Value = false,
+    Callback = function(state)
+        HubState.ESP = state
+        if state then
+            for _, p in ipairs(Players:GetPlayers()) do
+                if p.Character then ApplyHighlight(p.Character, p) end
+                p.CharacterAdded:Connect(function(c)
+                    if HubState.ESP then
+                        task.wait(0.5)
+                        ApplyHighlight(c, p)
+                    end
+                end)
+            end
+        else
+            for _, p in ipairs(Players:GetPlayers()) do
+                if p.Character then RemoveHighlight(p.Character) end
+            end
+        end
+    end
+})
+
+VisualsTab:Toggle({
+    Title = "Luminescent Fullbright (Max Daylight)",
+    Value = false,
+    Callback = function(state)
+        HubState.Fullbright = state
+        if state then
+            Lighting.Brightness = 2.5
+            Lighting.ClockTime = 14
+            Lighting.FogEnd = 100000
+            Lighting.GlobalShadows = false
+            Lighting.Ambient = Color3.fromRGB(255, 255, 255)
+        else
+            Lighting.Brightness = HubState.OriginalLighting.Brightness
+            Lighting.ClockTime = HubState.OriginalLighting.ClockTime
+            Lighting.FogEnd = HubState.OriginalLighting.FogEnd
+            Lighting.GlobalShadows = HubState.OriginalLighting.GlobalShadows
+            Lighting.Ambient = HubState.OriginalLighting.Ambient
+        end
+    end
+})
+
+VisualsTab:Slider({
+    Title = "Dynamic Field of View (FOV)",
+    Step = 1,
+    Value = { Min = 70, Max = 120, Default = 70 },
+    Callback = function(val)
+        Camera.FieldOfView = val
+    end
+})
+
+-- [[ ================================================================ ]]
+-- [[                         TAB 4: TELEPORT                          ]]
+-- [[ ================================================================ ]]
+local TeleportTab = Window:Tab({
+    Title = "Teleport",
+    Icon = "solar:map-point-bold"
+})
+
+local teleDest = nil
+local teleDropdown = TeleportTab:Dropdown({
+    Title = "Select Warp Destination",
+    Values = GetTargetNames(),
+    Value = 1,
+    Callback = function(name)
+        teleDest = Players:FindFirstChild(name)
+    end
+})
+
+TeleportTab:Button({
+    Title = "Refresh Players List",
+    Icon = "solar:refresh-bold",
+    Callback = function()
+        teleDropdown:SetValues(GetTargetNames())
+    end
+})
+
+TeleportTab:Button({
+    Title = "⚡ Instant Warp to Player",
+    Icon = "solar:transfer-horizontal-bold",
+    Callback = function()
+        if teleDest and teleDest.Character and teleDest.Character:FindFirstChild("HumanoidRootPart") then
+            if LocalPlayer.Character and LocalPlayer.Character:FindFirstChild("HumanoidRootPart") then
+                LocalPlayer.Character.HumanoidRootPart.CFrame = teleDest.Character.HumanoidRootPart.CFrame + Vector3.new(0, 3, 0)
+                WindUI:Notify({ Title = "Warped", Content = "Arrived at " .. teleDest.Name, Duration = 3 })
+            end
+        end
+    end
+})
+
+TeleportTab:Section({ Title = "Server Actions" })
+
+TeleportTab:Button({
+    Title = "Rejoin Server Instance",
+    Icon = "solar:restart-bold",
+    Callback = function()
+        TeleportService:TeleportToPlaceInstance(game.PlaceId, game.JobId, LocalPlayer)
+    end
+})
+
+TeleportTab:Button({
+    Title = "Server Hop (Low Ping Finder)",
+    Icon = "solar:plain-bold",
+    Callback = function()
+        pcall(function()
+            local servers = HttpService:JSONDecode(game:HttpGet("https://games.roblox.com/v1/games/" .. game.PlaceId .. "/servers/Public?sortOrder=Asc&limit=100"))
+            for _, s in ipairs(servers.data) do
+                if s.playing < s.maxPlayers and s.id ~= game.JobId then
+                    TeleportService:TeleportToPlaceInstance(game.PlaceId, s.id, LocalPlayer)
+                    break
+                end
+            end
+        end)
+    end
+})
+
+-- [[ ================================================================ ]]
+-- [[                         TAB 5: SETTINGS                          ]]
+-- [[ ================================================================ ]]
+local SettingsTab = Window:Tab({
+    Title = "Settings",
+    Icon = "solar:tuning-bold"
+})
+
+SettingsTab:Section({ Title = "License Credentials" })
+
+SettingsTab:Button({
+    Title = "Status: " .. HubState.UserTier,
+    Icon = "solar:user-check-bold",
+    Callback = function() end
+})
+
+SettingsTab:Section({ Title = "Aesthetics & Themes" })
+
+SettingsTab:Dropdown({
+    Title = "Palette Preset",
+    Values = { "CyberPulse", "Dark", "Rose", "Plant", "Red", "Terminal", "Midnight" },
+    Value = 1,
+    Callback = function(theme)
+        WindUI:SetTheme(theme)
+    end
+})
+
+SettingsTab:Button({
+    Title = "Copy Official Discord",
+    Icon = "solar:link-bold",
+    Callback = function()
+        copyToClipboard(DISCORD_INVITE)
+        WindUI:Notify({ Title = "Copied", Content = "discord.gg/pHuxGjqsc8 copied!", Duration = 4 })
+    end
+})
+
+SettingsTab:Button({
+    Title = "Safely Terminate Hub",
+    Icon = "solar:power-bold",
+    Callback = function()
+        if ESPFolder then ESPFolder:Destroy() end
+        Window:Destroy()
+    end
+})
+
+WindUI:Notify({
+    Title = "HiddenPulse ⚡ CyberPulse",
+    Content = "Activated! Press [G] to toggle window.",
+    Icon = "solar:check-circle-bold",
+    Duration = 5
+})
